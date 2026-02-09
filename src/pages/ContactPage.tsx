@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram, Facebook, MessageCircle } from "lucide-react";
 
 interface ContactSettings {
   email: string;
@@ -19,6 +19,8 @@ interface ContactSettings {
     linkedin: string;
     github: string;
     instagram: string;
+    facebook: string;
+    whatsapp: string;
   };
 }
 
@@ -239,7 +241,7 @@ const ContactPage = () => {
                           <Linkedin className="w-5 h-5" />
                         </a>
                       )}
-                      {contact.social_links.twitter && (
+                       {contact.social_links.twitter && (
                         <a
                           href={contact.social_links.twitter}
                           target="_blank"
@@ -249,14 +251,24 @@ const ContactPage = () => {
                           <Twitter className="w-5 h-5" />
                         </a>
                       )}
-                      {contact.social_links.instagram && (
+                      {contact.social_links.facebook && (
                         <a
-                          href={contact.social_links.instagram}
+                          href={contact.social_links.facebook}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-3 bg-muted rounded-xl hover:bg-primary hover:text-primary-foreground transition-colors"
                         >
-                          <Instagram className="w-5 h-5" />
+                          <Facebook className="w-5 h-5" />
+                        </a>
+                      )}
+                      {contact.social_links.whatsapp && (
+                        <a
+                          href={contact.social_links.whatsapp}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-3 bg-muted rounded-xl hover:bg-primary hover:text-primary-foreground transition-colors"
+                        >
+                          <MessageCircle className="w-5 h-5" />
                         </a>
                       )}
                     </div>
