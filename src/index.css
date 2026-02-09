@@ -107,12 +107,32 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
+    background: linear-gradient(135deg, #0B0B0B 0%, #121212 50%, #1A1A1A 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  #root {
+    min-height: 100vh;
   }
 
   ::selection {
     @apply bg-accent/20 text-foreground;
+  }
+
+  /* Orange gradient text utility */
+  .text-gradient-orange {
+    background: linear-gradient(90deg, #FF7A18 0%, #FF9F1C 50%, #FFC15A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Soft gray text */
+  .text-soft-gray {
+    color: #D1D1D1;
   }
 }
 

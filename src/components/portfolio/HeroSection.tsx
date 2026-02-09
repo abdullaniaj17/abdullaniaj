@@ -28,19 +28,12 @@ const HeroSection = ({ data }: HeroSectionProps) => {
     <section 
       id="hero" 
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{
-        background: "linear-gradient(135deg, #0B0B0B 0%, #121212 50%, #1A1A1A 100%)"
-      }}
     >
       {/* Subtle grid background */}
       <div className="absolute inset-0 grid-bg-subtle" />
       
       {/* Radial gradient overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_rgba(11,11,11,0.8)_70%)]" />
-      
-      {/* Top and bottom fade */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0B0B0B] to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0B0B0B] to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_0%,_rgba(11,11,11,0.6)_70%)]" />
 
       {/* Subtle accent glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-accent/[0.03] rounded-full blur-[150px]" />
@@ -53,7 +46,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="inline-flex items-center gap-2 px-5 py-2.5 mb-10 text-xs font-medium uppercase tracking-[0.2em] rounded-full border border-border/50 bg-card/30 text-[#D1D1D1] backdrop-blur-sm">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 mb-10 text-xs font-medium uppercase tracking-[0.2em] rounded-full border border-border/50 bg-card/30 text-soft-gray backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               Available for projects
             </span>
@@ -66,7 +59,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
           >
-            <span className="block text-[#D1D1D1]">Hi, I'm</span>
+            <span className="block text-soft-gray">Hi, I'm</span>
             <span className="block mt-2 text-accent">{name}</span>
           </motion.h1>
 
@@ -75,7 +68,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl md:text-2xl text-[#D1D1D1] mb-4 font-light tracking-wide"
+            className="text-xl md:text-2xl text-soft-gray mb-4 font-light tracking-wide"
           >
             {tagline}
           </motion.p>
@@ -85,13 +78,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="text-base md:text-lg mb-14 max-w-2xl mx-auto leading-relaxed font-medium"
-            style={{
-              background: "linear-gradient(90deg, #FF7A18 0%, #FF9F1C 50%, #FFC15A 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="text-base md:text-lg mb-14 max-w-2xl mx-auto leading-relaxed font-medium text-gradient-orange"
           >
             {bio}
           </motion.p>
@@ -114,7 +101,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             <Button
               size="lg"
               variant="outline"
-              className="text-sm font-medium px-8 py-6 rounded-full border-border/50 bg-card/30 hover:bg-card/50 hover:border-border transition-all duration-300 backdrop-blur-sm text-[#D1D1D1]"
+              className="text-sm font-medium px-8 py-6 rounded-full border-border/50 bg-card/30 hover:bg-card/50 hover:border-border transition-all duration-300 backdrop-blur-sm text-soft-gray"
               onClick={() => scrollToSection("contact")}
             >
               <Mail className="mr-2 h-4 w-4" />
