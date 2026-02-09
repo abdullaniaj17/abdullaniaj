@@ -46,7 +46,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="inline-flex items-center gap-2 px-5 py-2.5 mb-10 text-xs font-medium uppercase tracking-[0.2em] rounded-full border border-border/50 bg-card/30 text-soft-gray backdrop-blur-sm">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 mb-10 text-xs font-medium uppercase tracking-[0.2em] rounded-full border border-border/50 bg-card/30 text-white backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               Available for projects
             </span>
@@ -59,7 +59,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
           >
-            <span className="block text-soft-gray">Hi, I'm</span>
+            <span className="block text-white">Hi, I'm</span>
             <span className="block mt-2 text-accent">{name}</span>
           </motion.h1>
 
@@ -68,7 +68,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl md:text-2xl text-soft-gray mb-4 font-light tracking-wide"
+            className="text-xl md:text-2xl text-white mb-4 font-light tracking-wide"
           >
             {tagline}
           </motion.p>
@@ -101,7 +101,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             <Button
               size="lg"
               variant="outline"
-              className="text-sm font-medium px-8 py-6 rounded-full border-border/50 bg-card/30 hover:bg-card/50 hover:border-border transition-all duration-300 backdrop-blur-sm text-soft-gray"
+              className="text-sm font-medium px-8 py-6 rounded-full border-border/50 bg-card/30 hover:bg-card/50 hover:border-border transition-all duration-300 backdrop-blur-sm text-white"
               onClick={() => scrollToSection("contact")}
             >
               <Mail className="mr-2 h-4 w-4" />
