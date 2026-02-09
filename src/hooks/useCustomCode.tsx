@@ -13,13 +13,13 @@ export const useCustomCode = () => {
 
   useEffect(() => {
     const fetchCustomCode = async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("site_settings")
         .select("setting_value")
         .eq("setting_key", "custom_code")
-        .single();
+        .maybeSingle();
 
-      if (data) {
+      if (data && !error) {
         setCustomCode(data.setting_value as unknown as CustomCodeSettings);
       }
       setIsLoading(false);
