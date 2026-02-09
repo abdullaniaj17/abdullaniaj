@@ -50,20 +50,37 @@ const AdminCustomCode = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const { error: updateError } = await supabase
+      // Check if record exists
+      const { data: existing } = await supabase
         .from("site_settings")
-        .update({ setting_value: JSON.parse(JSON.stringify(customCode)) })
-        .eq("setting_key", "custom_code");
+        .select("id")
+        .eq("setting_key", "custom_code")
+        .maybeSingle();
 
-      if (updateError) {
-        await supabase.from("site_settings").insert([{
-          setting_key: "custom_code",
-          setting_value: JSON.parse(JSON.stringify(customCode)),
-        }]);
+      let error;
+      if (existing) {
+        // Update existing record
+        const result = await supabase
+          .from("site_settings")
+          .update({ setting_value: JSON.parse(JSON.stringify(customCode)) })
+          .eq("setting_key", "custom_code");
+        error = result.error;
+      } else {
+        // Insert new record
+        const result = await supabase
+          .from("site_settings")
+          .insert({
+            setting_key: "custom_code",
+            setting_value: JSON.parse(JSON.stringify(customCode)),
+          });
+        error = result.error;
       }
+
+      if (error) throw error;
 
       toast({ title: "Success", description: "Custom code saved successfully!" });
     } catch (error) {
+      console.error("Save error:", error);
       toast({ title: "Error", description: "Failed to save custom code", variant: "destructive" });
     } finally {
       setIsSaving(false);
