@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { Save, User, Mail, MapPin, Share2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import FaviconUploader from "@/components/admin/FaviconUploader";
 
 interface HeroSettings {
   name: string;
@@ -38,6 +39,10 @@ interface ContactSettings {
 
 interface StatsSettings {
   items: Array<{ label: string; value: string }>;
+}
+
+interface FaviconSettings {
+  favicon_url: string;
 }
 
 const AdminSettings = () => {
@@ -82,6 +87,10 @@ const AdminSettings = () => {
     ],
   });
 
+  const [favicon, setFavicon] = useState<FaviconSettings>({
+    favicon_url: "",
+  });
+
   const [highlightsText, setHighlightsText] = useState("");
 
   useEffect(() => {
@@ -107,6 +116,9 @@ const AdminSettings = () => {
               break;
             case "stats":
               setStats(value as unknown as StatsSettings);
+              break;
+            case "favicon":
+              setFavicon(value as unknown as FaviconSettings);
               break;
           }
         });
@@ -144,6 +156,7 @@ const AdminSettings = () => {
         saveSetting("about", updatedAbout),
         saveSetting("contact", contact),
         saveSetting("stats", stats),
+        saveSetting("favicon", favicon),
       ]);
 
       toast({ title: "Success", description: "Settings saved successfully!" });
@@ -152,6 +165,10 @@ const AdminSettings = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleFaviconChange = (url: string) => {
+    setFavicon({ favicon_url: url });
   };
 
   const updateStatItem = (index: number, field: "label" | "value", value: string) => {
@@ -180,6 +197,12 @@ const AdminSettings = () => {
           {isSaving ? "Saving..." : "Save All Changes"}
         </Button>
       </div>
+
+      {/* Favicon */}
+      <FaviconUploader
+        currentFaviconUrl={favicon.favicon_url}
+        onFaviconChange={handleFaviconChange}
+      />
 
       {/* Hero Section */}
       <Card>

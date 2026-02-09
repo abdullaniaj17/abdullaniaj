@@ -19,6 +19,7 @@ import AdminCustomCode from "./pages/admin/CustomCode";
 import AdminSEO from "./pages/admin/SEO";
 import CustomCodeInjector from "./components/CustomCodeInjector";
 import SEOHead from "./components/SEOHead";
+import FaviconManager from "./components/FaviconManager";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
       <Sonner />
       <CustomCodeInjector />
       <SEOHead />
+      <FaviconManager />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
