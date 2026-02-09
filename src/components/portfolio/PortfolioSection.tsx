@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, Github, Sparkles } from "lucide-react";
 
 interface Project {
   id: string;
@@ -67,7 +67,6 @@ const defaultProjects: Project[] = [
 const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps) => {
   const displayProjects = projects.length > 0 ? projects : defaultProjects;
   
-  // Get unique categories
   const categories = ["All", ...new Set(displayProjects.map(p => p.category).filter(Boolean))];
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -76,8 +75,17 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
     : displayProjects.filter(p => p.category === activeCategory);
 
   return (
-    <section id="portfolio" className="py-24">
-      <div className="container mx-auto px-4">
+    <section id="portfolio" className="relative py-32 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 mesh-gradient opacity-30" />
+      <motion.div
+        animate={{ x: [0, 50, 0], y: [0, -40, 0] }}
+        transition={{ duration: 20, repeat: Infinity }}
+        className="orb orb-accent w-[500px] h-[500px] -top-20 -right-40 opacity-20"
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -85,11 +93,19 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="text-sm font-medium text-primary uppercase tracking-wider">
+          <motion.span 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 mb-4 text-sm font-medium rounded-full glass border border-primary/20 text-primary"
+          >
+            <Sparkles className="h-4 w-4" />
             My Work
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-2">Portfolio</h2>
-          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+          </motion.span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            <span className="gradient-text">Portfolio</span>
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Explore my complete collection of projects across various domains.
           </p>
         </motion.div>
@@ -100,7 +116,7 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="flex flex-wrap justify-center gap-2 mb-12"
+          className="flex flex-wrap justify-center gap-3 mb-12"
         >
           {categories.map((category) => (
             <Button
@@ -108,7 +124,11 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
               variant={activeCategory === category ? "default" : "outline"}
               size="sm"
               onClick={() => setActiveCategory(category as string)}
-              className="transition-all duration-300"
+              className={`rounded-full transition-all duration-300 ${
+                activeCategory === category 
+                  ? "bg-gradient-to-r from-primary to-accent glow-sm" 
+                  : "glass border-border/50 hover:border-primary/50"
+              }`}
             >
               {category}
             </Button>
@@ -116,41 +136,41 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
         </motion.div>
 
         {/* Projects grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
                 className="group"
               >
-                <div className="bg-card rounded-xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300 h-full flex flex-col">
+                <div className="relative h-full rounded-2xl card-premium hover-lift overflow-hidden">
                   {/* Image */}
-                  <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 relative overflow-hidden">
+                  <div className="aspect-video relative overflow-hidden">
                     {project.image_url ? (
                       <img
                         src={project.image_url}
                         alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-3xl">💼</span>
+                      <div className="absolute inset-0 mesh-gradient flex items-center justify-center">
+                        <span className="text-4xl">💼</span>
                       </div>
                     )}
                     
                     {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-4 gap-3">
                       {project.live_url && (
                         <a
                           href={project.live_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2.5 bg-background rounded-full hover:scale-110 transition-transform"
+                          className="p-2.5 rounded-full glass border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
                         >
                           <ExternalLink className="h-4 w-4" />
                         </a>
@@ -160,36 +180,40 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
                           href={project.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2.5 bg-background rounded-full hover:scale-110 transition-transform"
+                          className="p-2.5 rounded-full glass border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
                         >
                           <Github className="h-4 w-4" />
                         </a>
                       )}
                     </div>
+
+                    {/* Category badge */}
+                    {project.category && (
+                      <div className="absolute top-3 left-3">
+                        <span className="px-2.5 py-1 text-xs font-medium rounded-full glass border border-primary/20 text-primary">
+                          {project.category}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Content */}
-                  <div className="p-5 flex-1 flex flex-col">
-                    {project.category && (
-                      <span className="text-xs font-medium text-primary uppercase tracking-wide">
-                        {project.category}
-                      </span>
-                    )}
-                    <h3 className="text-lg font-semibold mt-1.5 group-hover:text-primary transition-colors">
+                  <div className="p-5">
+                    <h3 className="text-lg font-semibold mb-1.5 group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
                     {project.short_description && (
-                      <p className="text-muted-foreground text-sm mt-2 line-clamp-2 flex-1">
+                      <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
                         {project.short_description}
                       </p>
                     )}
                     
                     {project.tags && project.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-4">
+                      <div className="flex flex-wrap gap-1.5">
                         {project.tags.slice(0, 3).map((tag, tagIndex) => (
                           <span
                             key={tagIndex}
-                            className="px-2 py-0.5 text-xs rounded bg-muted text-muted-foreground"
+                            className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground border border-border/50"
                           >
                             {tag}
                           </span>

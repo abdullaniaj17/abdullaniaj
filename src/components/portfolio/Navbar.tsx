@@ -66,7 +66,6 @@ const Navbar = () => {
   };
 
   const handleNavClick = (href: string) => {
-    // If on homepage and clicking a section link, scroll to it
     if (isHomePage && href !== "/") {
       const sectionId = `#${href.replace("/", "")}`;
       scrollToSection(sectionId);
@@ -80,10 +79,10 @@ const Navbar = () => {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? "bg-background/80 backdrop-blur-lg border-b border-border shadow-sm"
+            ? "glass-strong shadow-lg shadow-black/5"
             : "bg-transparent"
         }`}
       >
@@ -97,7 +96,7 @@ const Navbar = () => {
               {branding.use_logo && branding.logo_url ? (
                 <img src={branding.logo_url} alt={branding.site_name} className="h-8 object-contain" />
               ) : (
-                branding.site_name || "Portfolio"
+                <span className="gradient-text">{branding.site_name || "Portfolio"}</span>
               )}
             </Link>
 
@@ -108,13 +107,21 @@ const Navbar = () => {
                   key={item.label}
                   to={item.href}
                   onClick={() => handleNavClick(item.href)}
-                  className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-muted ${
+                  className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full group ${
                     location.pathname === item.href
                       ? "text-primary"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {item.label}
+                  {location.pathname === item.href && (
+                    <motion.div
+                      layoutId="navbar-indicator"
+                      className="absolute inset-0 rounded-full bg-primary/10 border border-primary/20 -z-10"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-1/2 rounded-full" />
                 </Link>
               ))}
             </div>
@@ -124,7 +131,7 @@ const Navbar = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
+                className="md:hidden rounded-full glass"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? (
@@ -148,22 +155,28 @@ const Navbar = () => {
             transition={{ duration: 0.2 }}
             className="fixed inset-x-0 top-16 z-40 md:hidden"
           >
-            <div className="bg-background/95 backdrop-blur-lg border-b border-border shadow-lg">
-              <div className="container mx-auto px-4 py-4">
+            <div className="glass-strong shadow-2xl mx-4 rounded-2xl overflow-hidden">
+              <div className="p-4">
                 <div className="flex flex-col gap-1">
-                  {navItems.map((item) => (
-                    <Link
+                  {navItems.map((item, index) => (
+                    <motion.div
                       key={item.label}
-                      to={item.href}
-                      onClick={() => handleNavClick(item.href)}
-                      className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
-                        location.pathname === item.href
-                          ? "text-primary bg-primary/10"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                      }`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
                     >
-                      {item.label}
-                    </Link>
+                      <Link
+                        to={item.href}
+                        onClick={() => handleNavClick(item.href)}
+                        className={`w-full text-left px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 block ${
+                          location.pathname === item.href
+                            ? "text-primary bg-primary/10 border border-primary/20"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
                   ))}
                 </div>
               </div>

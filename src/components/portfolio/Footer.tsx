@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Github, Linkedin, Twitter, Instagram, Heart } from "lucide-react";
 
 interface FooterProps {
@@ -22,39 +23,57 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
   const hasSocialLinks = Object.values(socialLinks).some((url) => url);
 
   return (
-    <footer className="bg-muted/50 border-t border-border py-12">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col items-center gap-6">
+    <footer className="relative py-16 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-card/50" />
+      <div className="absolute inset-0 mesh-gradient opacity-20" />
+      
+      {/* Top border gradient */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+      <div className="container mx-auto px-4 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col items-center gap-8"
+        >
           {/* Social Links */}
           {hasSocialLinks && (
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               {Object.entries(socialLinks).map(([platform, url]) => {
                 if (!url) return null;
                 const Icon = socialIcons[platform as keyof typeof socialIcons];
                 if (!Icon) return null;
                 return (
-                  <a
+                  <motion.a
                     key={platform}
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2.5 rounded-full bg-card border border-border hover:border-primary hover:text-primary transition-all duration-300 hover:scale-110"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-3 rounded-xl glass border border-border/50 hover:border-primary/50 hover:text-primary transition-all duration-300"
                   >
-                    <Icon className="h-4 w-4" />
-                  </a>
+                    <Icon className="h-5 w-5" />
+                  </motion.a>
                 );
               })}
             </div>
           )}
 
+          {/* Divider */}
+          <div className="w-24 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
           {/* Copyright */}
-          <div className="text-center text-sm text-muted-foreground">
-            <p className="flex items-center justify-center gap-1">
-              © {currentYear} All rights reserved. Made with{" "}
-              <Heart className="h-3.5 w-3.5 text-destructive fill-destructive" />
+          <div className="text-center">
+            <p className="flex items-center justify-center gap-2 text-muted-foreground">
+              © {currentYear} All rights reserved. Made with
+              <Heart className="h-4 w-4 text-primary fill-primary animate-pulse" />
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );
