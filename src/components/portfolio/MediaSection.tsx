@@ -4,6 +4,11 @@ import media2 from "@/assets/media-2.jpg";
 import media3 from "@/assets/media-3.jpg";
 import media4 from "@/assets/media-4.png";
 import media5 from "@/assets/media-5.png";
+import media6 from "@/assets/media-6.jpg";
+import media7 from "@/assets/media-7.jpg";
+import media8 from "@/assets/media-8.png";
+import media9 from "@/assets/media-9.jpg";
+import media10 from "@/assets/media-10.jpg";
 
 const mediaItems = [
   { id: "1", title: "Google Ads Campaign Performance", image: media1, description: "15.6K clicks with 4.44% conversion rate" },
@@ -11,6 +16,11 @@ const mediaItems = [
   { id: "3", title: "PPC Campaign Analytics", image: media3, description: "3.74K clicks, 232 conversions at $5.84 cost/conv" },
   { id: "4", title: "Google PPC Campaign Specialist", image: media4, description: "Professional Google Ads management" },
   { id: "5", title: "Google Ads for Local Business", image: media5, description: "Setup & manage with keyword research" },
+  { id: "6", title: "CRO Certification", image: media6, description: "Mastering Conversion Rate Optimization (CRO)" },
+  { id: "7", title: "Google Ads Strategy Certification", image: media7, description: "Google Ads Management & Strategy Proposal" },
+  { id: "8", title: "Google Ads for Plumbing Service", image: media8, description: "10.2K impressions, 8.5K conv value, $9.8K cost" },
+  { id: "9", title: "Plumbing Campaign Metrics", image: media9, description: "12.8K clicks, 398 calls at $2.07 avg CPC" },
+  { id: "10", title: "Campaign Overview Analytics", image: media10, description: "13.6K clicks, 1.96K conversions at $2.25 CPC" },
 ];
 
 const MediaSection = () => {
