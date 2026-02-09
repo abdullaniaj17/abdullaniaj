@@ -255,7 +255,7 @@ const Index = () => {
       {sections.about && <AboutSection data={aboutSettings} />}
       {sections.skills && <SkillsSection skills={skills} />}
       {sections.featured_projects && <FeaturedProjectsSection projects={featuredProjects} />}
-      {sections.portfolio && <PortfolioSection projects={projects} />}
+      {sections.portfolio && <PortfolioSection />}
       {sections.services && <ServicesSection services={services} />}
       {sections.testimonials && <TestimonialsSection testimonials={testimonials} />}
       {sections.blog && <BlogSection posts={blogPosts} />}
