@@ -127,7 +127,7 @@
 
   /* Mango-orange gradient text utility */
   .text-gradient-orange {
-    background: linear-gradient(90deg, #D84A16 0%, #E45A1F 50%, #F06A2A 100%);
+    background: linear-gradient(90deg, #D84A16 0%, #E45A1F 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
