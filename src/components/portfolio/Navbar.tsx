@@ -65,8 +65,9 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (e: React.MouseEvent, href: string) => {
     if (isHomePage && href !== "/") {
+      e.preventDefault();
       const sectionId = `#${href.replace("/", "")}`;
       scrollToSection(sectionId);
     } else {
@@ -106,7 +107,7 @@ const Navbar = () => {
                 <Link
                   key={item.label}
                   to={item.href}
-                  onClick={() => handleNavClick(item.href)}
+                  onClick={(e) => handleNavClick(e, item.href)}
                   className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
                     location.pathname === item.href
                       ? "text-foreground"
@@ -183,7 +184,7 @@ const Navbar = () => {
                 >
                   <Link
                     to={item.href}
-                    onClick={() => handleNavClick(item.href)}
+                    onClick={(e) => handleNavClick(e, item.href)}
                     className={`block text-2xl font-medium py-3 px-4 rounded-xl transition-colors ${
                       location.pathname === item.href
                         ? "text-accent bg-card/50"
