@@ -19,12 +19,14 @@ import {
   Code,
   Search,
   ShieldX,
+  Files,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { User, Session } from "@supabase/supabase-js";
 
 const sidebarItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
+  { label: "Pages", icon: Files, path: "/admin/pages" },
   { label: "Projects", icon: FolderKanban, path: "/admin/projects" },
   { label: "Blog Posts", icon: FileText, path: "/admin/blog" },
   { label: "Testimonials", icon: MessageSquare, path: "/admin/testimonials" },
