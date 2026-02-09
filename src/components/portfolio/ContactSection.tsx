@@ -14,9 +14,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -45,7 +45,6 @@ interface ContactSectionProps {
 
 const ContactSection = ({ data }: ContactSectionProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
   const contactInfo = {
     email: data?.email || "hello@example.com",
@@ -76,17 +75,10 @@ const ContactSection = ({ data }: ContactSectionProps) => {
 
       if (error) throw error;
 
-      toast({
-        title: "Message sent!",
-        description: "Thank you for reaching out. I'll get back to you soon.",
-      });
+      toast.success("Message sent successfully!");
       form.reset();
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to send message. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -99,10 +91,16 @@ const ContactSection = ({ data }: ContactSectionProps) => {
     instagram: Instagram,
   };
 
+  const contactItems = [
+    { icon: Mail, label: "Email", value: contactInfo.email, href: `mailto:${contactInfo.email}` },
+    { icon: Phone, label: "Phone", value: contactInfo.phone, href: `tel:${contactInfo.phone}` },
+    { icon: MapPin, label: "Location", value: contactInfo.location },
+  ];
+
   return (
     <section id="contact" className="relative py-32 overflow-hidden">
       {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 grid-bg-dots-subtle" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -114,110 +112,110 @@ const ContactSection = ({ data }: ContactSectionProps) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
-            Let's Connect
+          <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+            Contact
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-accent">Get In Touch</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
+            <span className="text-foreground">Let's Work</span>{" "}
+            <span className="text-accent">Together</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Have a project in mind? Let's discuss how we can work together.
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+            Have a project in mind? Let's discuss how we can bring your ideas to life.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 max-w-6xl mx-auto">
           {/* Contact Info */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-2 space-y-8"
           >
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-semibold mb-4">Contact Information</h3>
-                <p className="text-muted-foreground">
-                  Feel free to reach out. I typically respond within 24 hours.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <a
-                  href={`mailto:${contactInfo.email}`}
-                  className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-300 group"
-                >
-                  <div className="p-3 rounded-xl border border-border text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300">
-                    <Mail className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Email</p>
-                    <p className="font-medium text-lg">{contactInfo.email}</p>
-                  </div>
-                </a>
-
-                <a
-                  href={`tel:${contactInfo.phone}`}
-                  className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-300 group"
-                >
-                  <div className="p-3 rounded-xl border border-border text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300">
-                    <Phone className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Phone</p>
-                    <p className="font-medium text-lg">{contactInfo.phone}</p>
-                  </div>
-                </a>
-
-                <div className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card/50">
-                  <div className="p-3 rounded-xl border border-border text-accent">
-                    <MapPin className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Location</p>
-                    <p className="font-medium text-lg">{contactInfo.location}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Social Links */}
-              {Object.keys(contactInfo.social_links).some(
-                (key) => contactInfo.social_links[key as keyof typeof contactInfo.social_links]
-              ) && (
-                <div>
-                  <h4 className="font-medium mb-4 text-lg">Follow Me</h4>
-                  <div className="flex gap-3">
-                    {Object.entries(contactInfo.social_links).map(([platform, url]) => {
-                      if (!url) return null;
-                      const Icon = socialIcons[platform as keyof typeof socialIcons];
-                      if (!Icon) return null;
-                      return (
-                        <a
-                          key={platform}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-3 rounded-xl border border-border hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
-                        >
-                          <Icon className="h-5 w-5" />
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+            <div>
+              <h3 className="text-2xl font-semibold text-foreground mb-4">
+                Get in Touch
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+              </p>
             </div>
+
+            <div className="space-y-4">
+              {contactItems.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                >
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      className="flex items-start gap-4 p-4 rounded-xl border border-border/30 bg-card/30 hover:border-border/60 transition-all duration-300 group"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0 group-hover:bg-accent/20 transition-colors">
+                        <item.icon className="w-5 h-5 text-accent" />
+                      </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground mb-1">{item.label}</div>
+                        <div className="text-foreground font-medium">{item.value}</div>
+                      </div>
+                    </a>
+                  ) : (
+                    <div className="flex items-start gap-4 p-4 rounded-xl border border-border/30 bg-card/30">
+                      <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <item.icon className="w-5 h-5 text-accent" />
+                      </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground mb-1">{item.label}</div>
+                        <div className="text-foreground font-medium">{item.value}</div>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Social Links */}
+            {Object.keys(contactInfo.social_links).some(
+              (key) => contactInfo.social_links[key as keyof typeof contactInfo.social_links]
+            ) && (
+              <div>
+                <h4 className="font-medium mb-4 text-foreground">Follow Me</h4>
+                <div className="flex gap-3">
+                  {Object.entries(contactInfo.social_links).map(([platform, url]) => {
+                    if (!url) return null;
+                    const Icon = socialIcons[platform as keyof typeof socialIcons];
+                    if (!Icon) return null;
+                    return (
+                      <a
+                        key={platform}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-lg border border-border/30 bg-card/30 flex items-center justify-center text-muted-foreground hover:text-accent hover:border-accent/50 transition-all duration-300"
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </motion.div>
 
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-3"
           >
-            <div className="rounded-2xl border border-border bg-card/50 p-8">
-              <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
-              
+            <div className="rounded-2xl border border-border/30 bg-card/30 p-8">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                   <div className="grid sm:grid-cols-2 gap-5">
@@ -226,11 +224,11 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-muted-foreground">Name</FormLabel>
+                          <FormLabel className="text-muted-foreground text-sm">Name</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="Your name" 
-                              className="rounded-xl border-border bg-background h-12 focus:border-accent"
+                              className="h-12 rounded-xl bg-card/50 border-border/30 focus:border-accent/50 placeholder:text-muted-foreground/50"
                               {...field} 
                             />
                           </FormControl>
@@ -243,12 +241,12 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-muted-foreground">Email</FormLabel>
+                          <FormLabel className="text-muted-foreground text-sm">Email</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="your@email.com" 
                               type="email" 
-                              className="rounded-xl border-border bg-background h-12 focus:border-accent"
+                              className="h-12 rounded-xl bg-card/50 border-border/30 focus:border-accent/50 placeholder:text-muted-foreground/50"
                               {...field} 
                             />
                           </FormControl>
@@ -263,11 +261,11 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                     name="subject"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-muted-foreground">Subject (Optional)</FormLabel>
+                        <FormLabel className="text-muted-foreground text-sm">Subject (Optional)</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="What's this about?" 
-                            className="rounded-xl border-border bg-background h-12 focus:border-accent"
+                            className="h-12 rounded-xl bg-card/50 border-border/30 focus:border-accent/50 placeholder:text-muted-foreground/50"
                             {...field} 
                           />
                         </FormControl>
@@ -281,11 +279,11 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-muted-foreground">Message</FormLabel>
+                        <FormLabel className="text-muted-foreground text-sm">Message</FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Tell me about your project..."
-                            className="min-h-[140px] resize-none rounded-xl border-border bg-background focus:border-accent"
+                            className="min-h-[140px] resize-none rounded-xl bg-card/50 border-border/30 focus:border-accent/50 placeholder:text-muted-foreground/50"
                             {...field}
                           />
                         </FormControl>
@@ -297,18 +295,18 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                   <Button 
                     type="submit" 
                     size="lg" 
-                    className="w-full rounded-full h-14 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 text-lg font-medium" 
+                    className="w-full sm:w-auto rounded-full px-8 py-6 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 text-sm font-medium" 
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <span className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin" />
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                         Sending...
-                      </span>
+                      </>
                     ) : (
                       <>
                         Send Message
-                        <Send className="ml-2 h-5 w-5" />
+                        <Send className="ml-2 h-4 w-4" />
                       </>
                     )}
                   </Button>

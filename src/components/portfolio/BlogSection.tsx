@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Calendar } from "lucide-react";
 
 interface BlogPost {
   id: string;
@@ -59,7 +60,7 @@ const BlogSection = ({ posts = defaultPosts }: BlogSectionProps) => {
   return (
     <section id="blog" className="relative py-32 overflow-hidden">
       {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 grid-bg-dots-subtle" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -69,21 +70,19 @@ const BlogSection = ({ posts = defaultPosts }: BlogSectionProps) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
-            Latest Articles
+          <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+            Blog
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-accent">Blog & Insights</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <span className="text-foreground">Latest</span>{" "}
+            <span className="text-accent">Articles</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Thoughts, tutorials, and insights from my experience.
-          </p>
         </motion.div>
 
         {/* Blog grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {displayPosts.map((post, index) => (
             <motion.article
               key={post.id}
@@ -91,67 +90,70 @@ const BlogSection = ({ posts = defaultPosts }: BlogSectionProps) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group cursor-pointer"
+              className="group"
             >
-              <div className="h-full rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-500 hover-lift overflow-hidden">
-                {/* Image */}
-                <div className="aspect-[16/10] relative overflow-hidden border-b border-border">
-                  {post.image_url ? (
-                    <img
-                      src={post.image_url}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 grid-bg flex items-center justify-center">
-                      <span className="text-5xl">📝</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  {/* Meta */}
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                    {post.published_at && (
-                      <span className="flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5 text-accent" />
-                        {formatDate(post.published_at)}
-                      </span>
+              <Link to={`/blog/${post.slug}`} className="block h-full">
+                <div className="h-full rounded-2xl border border-border/30 bg-card/30 hover:border-border/60 transition-all duration-500 overflow-hidden">
+                  {/* Image */}
+                  <div className="aspect-[16/10] relative overflow-hidden">
+                    {post.image_url ? (
+                      <img
+                        src={post.image_url}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-card to-muted">
+                        <span className="text-4xl font-bold text-muted-foreground/20">
+                          {post.title.charAt(0)}
+                        </span>
+                      </div>
                     )}
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="h-3.5 w-3.5 text-accent" />
-                      5 min read
-                    </span>
+                    
+                    {/* Hover arrow */}
+                    <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
+                      <ArrowUpRight className="w-4 h-4 text-accent" />
+                    </div>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-lg font-semibold mb-2 group-hover:text-accent transition-colors line-clamp-2">
-                    {post.title}
-                  </h3>
+                  {/* Content */}
+                  <div className="p-6">
+                    {/* Date */}
+                    {post.published_at && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                        <Calendar className="h-3.5 w-3.5 text-accent" />
+                        {formatDate(post.published_at)}
+                      </div>
+                    )}
 
-                  {/* Excerpt */}
-                  {post.excerpt && (
-                    <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
-                      {post.excerpt}
-                    </p>
-                  )}
+                    {/* Title */}
+                    <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-accent transition-colors line-clamp-2">
+                      {post.title}
+                    </h3>
 
-                  {/* Tags */}
-                  {post.tags && post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.slice(0, 2).map((tag, tagIndex) => (
-                        <span
-                          key={tagIndex}
-                          className="px-2.5 py-1 text-xs rounded-md border border-accent/30 text-accent"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                    {/* Excerpt */}
+                    {post.excerpt && (
+                      <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
+                        {post.excerpt}
+                      </p>
+                    )}
+
+                    {/* Tags */}
+                    {post.tags && post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {post.tags.slice(0, 2).map((tag, tagIndex) => (
+                          <span
+                            key={tagIndex}
+                            className="px-2.5 py-1 text-xs font-medium rounded-md text-accent bg-accent/10"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </Link>
             </motion.article>
           ))}
         </div>
@@ -167,10 +169,13 @@ const BlogSection = ({ posts = defaultPosts }: BlogSectionProps) => {
           <Button 
             variant="outline" 
             size="lg"
-            className="rounded-full border-border hover:bg-accent hover:text-accent-foreground hover:border-accent px-8"
+            asChild
+            className="rounded-full border-border/50 hover:border-border px-8"
           >
-            View All Articles
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <Link to="/blog">
+              View All Articles
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
           </Button>
         </motion.div>
       </div>

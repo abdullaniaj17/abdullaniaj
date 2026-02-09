@@ -60,10 +60,18 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 const SkillsSection = ({ skills = defaultSkills }: SkillsSectionProps) => {
   const displaySkills = skills.length > 0 ? skills : defaultSkills;
 
+  // Group skills by category
+  const groupedSkills = displaySkills.reduce((acc, skill) => {
+    const category = skill.category || "Other";
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(skill);
+    return acc;
+  }, {} as Record<string, Skill[]>);
+
   return (
     <section id="skills" className="relative py-32 overflow-hidden">
       {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 grid-bg-subtle" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -73,68 +81,71 @@ const SkillsSection = ({ skills = defaultSkills }: SkillsSectionProps) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
-            My Expertise
+          <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+            Expertise
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-accent">Skills & Technologies</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <span className="text-foreground">Skills &</span>{" "}
+            <span className="text-accent">Technologies</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            A comprehensive toolkit built over years of experience.
-          </p>
         </motion.div>
 
-        {/* Skills grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {displaySkills.map((skill, index) => {
-            const IconComponent = iconMap[skill.icon || "code"] || Code;
-            
-            return (
-              <motion.div
-                key={skill.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group"
-              >
-                <div className="relative h-full p-6 rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-500 hover-lift">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-xl border border-border text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300">
-                      <IconComponent className="h-6 w-6" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg mb-1">{skill.name}</h3>
-                      {skill.category && (
-                        <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                          {skill.category}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Progress bar */}
-                  <div className="mt-6">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-muted-foreground">Proficiency</span>
-                      <span className="font-semibold text-accent">{skill.proficiency}%</span>
-                    </div>
-                    <div className="h-1.5 bg-border rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.proficiency}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.3 + index * 0.1, ease: "easeOut" }}
-                        className="h-full rounded-full bg-accent"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+        {/* Skills by Category */}
+        <div className="max-w-5xl mx-auto space-y-16">
+          {Object.entries(groupedSkills).map(([category, categorySkills], categoryIndex) => (
+            <motion.div
+              key={category}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+            >
+              <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground mb-8 flex items-center gap-4">
+                <span>{category}</span>
+                <span className="flex-1 h-px bg-border/50" />
+              </h3>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {categorySkills.map((skill, index) => {
+                  const IconComponent = iconMap[skill.icon || "code"] || Code;
+                  
+                  return (
+                    <motion.div
+                      key={skill.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: index * 0.05 }}
+                      className="group relative p-5 rounded-xl bg-card/30 border border-border/30 hover:border-border/60 transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
+                          <IconComponent className="w-5 h-5 text-accent" />
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-medium text-foreground">{skill.name}</span>
+                        </div>
+                        <span className="text-sm text-accent font-medium">{skill.proficiency}%</span>
+                      </div>
+                      
+                      {/* Progress bar */}
+                      <div className="h-1 bg-muted/50 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${skill.proficiency}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                          className="h-full bg-accent rounded-full"
+                        />
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

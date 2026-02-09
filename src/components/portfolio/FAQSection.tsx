@@ -56,7 +56,7 @@ const FAQSection = ({ faqs = defaultFAQs }: FAQSectionProps) => {
   return (
     <section id="faq" className="relative py-32 overflow-hidden">
       {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 grid-bg-subtle" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -68,15 +68,13 @@ const FAQSection = ({ faqs = defaultFAQs }: FAQSectionProps) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
-            Have Questions?
+          <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+            FAQ
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-accent">Frequently Asked Questions</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <span className="text-foreground">Common</span>{" "}
+            <span className="text-accent">Questions</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Find answers to common questions about my services.
-          </p>
         </motion.div>
 
         {/* FAQ Accordion */}
@@ -87,7 +85,7 @@ const FAQSection = ({ faqs = defaultFAQs }: FAQSectionProps) => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="max-w-3xl mx-auto"
         >
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion type="single" collapsible className="space-y-3">
             {displayFAQs.map((faq, index) => (
               <motion.div
                 key={faq.id}
@@ -98,17 +96,17 @@ const FAQSection = ({ faqs = defaultFAQs }: FAQSectionProps) => {
               >
                 <AccordionItem
                   value={faq.id}
-                  className="rounded-2xl border border-border bg-card/50 px-6 data-[state=open]:border-accent/30 transition-all duration-300"
+                  className="rounded-xl border border-border/30 bg-card/30 px-6 data-[state=open]:border-border/60 data-[state=open]:bg-card/50 transition-all duration-300"
                 >
-                  <AccordionTrigger className="text-left hover:no-underline py-6 group">
+                  <AccordionTrigger className="text-left hover:no-underline py-5 group">
                     <div className="flex items-center gap-4">
-                      <span className="flex-shrink-0 w-8 h-8 rounded-lg border border-border flex items-center justify-center text-sm font-semibold text-accent group-hover:bg-accent group-hover:text-accent-foreground group-hover:border-accent transition-colors">
+                      <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-muted/50 border border-border/30 flex items-center justify-center text-xs font-semibold text-muted-foreground group-hover:text-accent group-hover:border-accent/30 transition-colors">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      <span className="font-medium text-lg pr-4">{faq.question}</span>
+                      <span className="font-medium text-foreground pr-4">{faq.question}</span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-6 pl-12">
+                  <AccordionContent className="text-muted-foreground pb-5 pl-12 text-sm leading-relaxed">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>

@@ -84,7 +84,7 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
   return (
     <section id="testimonials" className="relative py-32 overflow-hidden">
       {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 grid-bg-subtle" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -94,24 +94,22 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
-            Client Feedback
+          <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+            Testimonials
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-accent">Testimonials</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <span className="text-foreground">Client</span>{" "}
+            <span className="text-accent">Reviews</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            What my clients say about working with me.
-          </p>
         </motion.div>
 
         {/* Testimonial card */}
         <div className="max-w-4xl mx-auto">
-          <div className="relative rounded-2xl border border-border bg-card/50 p-8 md:p-12 overflow-hidden">
+          <div className="relative rounded-2xl border border-border/30 bg-card/30 p-8 md:p-12 overflow-hidden">
             {/* Quote icon */}
-            <Quote className="absolute top-8 left-8 h-16 w-16 text-border" />
+            <Quote className="absolute top-8 left-8 h-16 w-16 text-border/50" />
 
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -126,7 +124,7 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
               >
                 <div className="text-center">
                   {/* Avatar */}
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full border border-border bg-card flex items-center justify-center overflow-hidden">
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full border border-border/30 bg-card/50 flex items-center justify-center overflow-hidden">
                     {currentTestimonial.client_avatar ? (
                       <img
                         src={currentTestimonial.client_avatar}
@@ -157,13 +155,13 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
                   )}
 
                   {/* Content */}
-                  <blockquote className="text-xl md:text-2xl text-foreground/90 leading-relaxed mb-8 font-light italic">
+                  <blockquote className="text-xl md:text-2xl text-foreground/90 leading-relaxed mb-8 font-light">
                     "{currentTestimonial.content}"
                   </blockquote>
 
                   {/* Client info */}
                   <div>
-                    <p className="font-semibold text-lg text-accent">{currentTestimonial.client_name}</p>
+                    <p className="font-semibold text-lg text-foreground">{currentTestimonial.client_name}</p>
                     {(currentTestimonial.client_title || currentTestimonial.client_company) && (
                       <p className="text-sm text-muted-foreground mt-1">
                         {currentTestimonial.client_title}
@@ -183,7 +181,7 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
                   variant="outline"
                   size="icon"
                   onClick={prev}
-                  className="rounded-full border-border hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
+                  className="rounded-full border-border/50 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
@@ -199,7 +197,7 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
                       className={`h-2 rounded-full transition-all duration-500 ${
                         index === currentIndex 
                           ? "w-8 bg-accent" 
-                          : "w-2 bg-border hover:bg-muted-foreground"
+                          : "w-2 bg-border/50 hover:bg-muted-foreground"
                       }`}
                     />
                   ))}
@@ -209,7 +207,7 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
                   variant="outline"
                   size="icon"
                   onClick={next}
-                  className="rounded-full border-border hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
+                  className="rounded-full border-border/50 hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </Button>

@@ -63,24 +63,27 @@ const StatsSection = ({ stats }: StatsSectionProps) => {
 
   return (
     <section id="stats" className="relative py-24 overflow-hidden" ref={ref}>
-      {/* Background */}
+      {/* Accent background */}
       <div className="absolute inset-0 bg-accent" />
-      <div className="absolute inset-0 grid-bg-large opacity-20" />
+      <div className="absolute inset-0 grid-bg-large opacity-10" />
+      
+      {/* Subtle gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-accent via-transparent to-accent opacity-20" />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 max-w-5xl mx-auto">
           {displayStats.map((stat, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="text-center"
             >
-              <div className="text-5xl md:text-6xl lg:text-7xl font-bold text-accent-foreground mb-2">
+              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-accent-foreground mb-2 tracking-tight">
                 <AnimatedCounter value={stat.value} inView={isInView} />
               </div>
-              <div className="text-accent-foreground/70 text-sm md:text-base font-medium uppercase tracking-wider">
+              <div className="text-accent-foreground/70 text-xs sm:text-sm font-medium uppercase tracking-[0.15em]">
                 {stat.label}
               </div>
             </motion.div>
