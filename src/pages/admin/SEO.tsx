@@ -87,20 +87,37 @@ const AdminSEO = () => {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const { error: updateError } = await supabase
+      // Check if record exists
+      const { data: existing } = await supabase
         .from("site_settings")
-        .update({ setting_value: JSON.parse(JSON.stringify(seoSettings)) })
-        .eq("setting_key", "seo_settings");
+        .select("id")
+        .eq("setting_key", "seo_settings")
+        .maybeSingle();
 
-      if (updateError) {
-        await supabase.from("site_settings").insert([{
-          setting_key: "seo_settings",
-          setting_value: JSON.parse(JSON.stringify(seoSettings)),
-        }]);
+      let error;
+      if (existing) {
+        // Update existing record
+        const result = await supabase
+          .from("site_settings")
+          .update({ setting_value: JSON.parse(JSON.stringify(seoSettings)) })
+          .eq("setting_key", "seo_settings");
+        error = result.error;
+      } else {
+        // Insert new record
+        const result = await supabase
+          .from("site_settings")
+          .insert({
+            setting_key: "seo_settings",
+            setting_value: JSON.parse(JSON.stringify(seoSettings)),
+          });
+        error = result.error;
       }
+
+      if (error) throw error;
 
       toast({ title: "Success", description: "SEO settings saved successfully!" });
     } catch (error) {
+      console.error("Save error:", error);
       toast({ title: "Error", description: "Failed to save SEO settings", variant: "destructive" });
     } finally {
       setIsSaving(false);
