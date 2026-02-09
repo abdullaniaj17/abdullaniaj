@@ -9,6 +9,7 @@ import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProjects from "./pages/admin/Projects";
 import AdminBlog from "./pages/admin/Blog";
+import AdminMedia from "./pages/admin/Media";
 import AdminTestimonials from "./pages/admin/Testimonials";
 import AdminFAQs from "./pages/admin/FAQs";
 import AdminServices from "./pages/admin/Services";
@@ -57,6 +58,7 @@ const App = () => (
             <Route index element={<AdminDashboard />} />
             <Route path="projects" element={<AdminProjects />} />
             <Route path="blog" element={<AdminBlog />} />
+            <Route path="media" element={<AdminMedia />} />
             <Route path="testimonials" element={<AdminTestimonials />} />
             <Route path="faqs" element={<AdminFAQs />} />
             <Route path="services" element={<AdminServices />} />
