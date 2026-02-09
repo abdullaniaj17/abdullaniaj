@@ -1,11 +1,9 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, Trash2, Image } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 interface FaviconUploaderProps {
   currentFaviconUrl: string;
@@ -17,6 +15,15 @@ const FaviconUploader = ({ currentFaviconUrl, onFaviconChange }: FaviconUploader
   const [previewUrl, setPreviewUrl] = useState<string>(currentFaviconUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Sync previewUrl when currentFaviconUrl prop changes
+  useEffect(() => {
+    setPreviewUrl(currentFaviconUrl);
+  }, [currentFaviconUrl]);
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -125,24 +132,25 @@ const FaviconUploader = ({ currentFaviconUrl, onFaviconChange }: FaviconUploader
           {/* Upload controls */}
           <div className="flex-1 space-y-3">
             <div className="flex items-center gap-2">
-              <Input
+              <input
                 ref={fileInputRef}
                 type="file"
                 accept=".ico,.png,.jpg,.jpeg,.svg,image/x-icon,image/png,image/jpeg,image/svg+xml"
                 onChange={handleFileSelect}
                 className="hidden"
-                id="favicon-upload"
               />
-              <Label htmlFor="favicon-upload" asChild>
-                <Button variant="outline" disabled={isUploading} asChild>
-                  <span className="cursor-pointer">
-                    <Upload className="h-4 w-4 mr-2" />
-                    {isUploading ? "Uploading..." : "Upload Favicon"}
-                  </span>
-                </Button>
-              </Label>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={isUploading}
+                onClick={handleButtonClick}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                {isUploading ? "Uploading..." : "Upload Favicon"}
+              </Button>
               {previewUrl && (
                 <Button
+                  type="button"
                   variant="ghost"
                   size="icon"
                   onClick={handleRemoveFavicon}
