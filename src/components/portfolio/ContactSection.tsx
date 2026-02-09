@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram, Sparkles } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -101,18 +101,9 @@ const ContactSection = ({ data }: ContactSectionProps) => {
 
   return (
     <section id="contact" className="relative py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 mesh-gradient opacity-40" />
-      <motion.div
-        animate={{ x: [0, 40, 0], y: [0, -30, 0] }}
-        transition={{ duration: 20, repeat: Infinity }}
-        className="orb orb-primary w-[500px] h-[500px] -bottom-40 -left-40 opacity-20"
-      />
-      <motion.div
-        animate={{ x: [0, -30, 0], y: [0, 40, 0] }}
-        transition={{ duration: 25, repeat: Infinity }}
-        className="orb orb-accent w-[400px] h-[400px] top-20 -right-40 opacity-20"
-      />
+      {/* Grid background */}
+      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
@@ -123,17 +114,11 @@ const ContactSection = ({ data }: ContactSectionProps) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 mb-4 text-sm font-medium rounded-full glass border border-primary/20 text-primary"
-          >
-            <Sparkles className="h-4 w-4" />
+          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
             Let's Connect
-          </motion.span>
+          </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="gradient-text">Get In Touch</span>
+            <span className="text-accent">Get In Touch</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Have a project in mind? Let's discuss how we can work together.
@@ -152,16 +137,16 @@ const ContactSection = ({ data }: ContactSectionProps) => {
               <div>
                 <h3 className="text-2xl font-semibold mb-4">Contact Information</h3>
                 <p className="text-muted-foreground">
-                  Feel free to reach out through any of these channels. I typically respond within 24 hours.
+                  Feel free to reach out. I typically respond within 24 hours.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <a
                   href={`mailto:${contactInfo.email}`}
-                  className="flex items-center gap-4 p-5 rounded-2xl card-premium hover-lift group"
+                  className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-300 group"
                 >
-                  <div className="p-3 rounded-xl glass border border-primary/20 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 glow-sm">
+                  <div className="p-3 rounded-xl border border-border text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300">
                     <Mail className="h-6 w-6" />
                   </div>
                   <div>
@@ -172,9 +157,9 @@ const ContactSection = ({ data }: ContactSectionProps) => {
 
                 <a
                   href={`tel:${contactInfo.phone}`}
-                  className="flex items-center gap-4 p-5 rounded-2xl card-premium hover-lift group"
+                  className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-300 group"
                 >
-                  <div className="p-3 rounded-xl glass border border-primary/20 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 glow-sm">
+                  <div className="p-3 rounded-xl border border-border text-accent group-hover:bg-accent group-hover:text-accent-foreground transition-all duration-300">
                     <Phone className="h-6 w-6" />
                   </div>
                   <div>
@@ -183,8 +168,8 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                   </div>
                 </a>
 
-                <div className="flex items-center gap-4 p-5 rounded-2xl card-premium">
-                  <div className="p-3 rounded-xl glass border border-primary/20 text-primary glow-sm">
+                <div className="flex items-center gap-4 p-5 rounded-2xl border border-border bg-card/50">
+                  <div className="p-3 rounded-xl border border-border text-accent">
                     <MapPin className="h-6 w-6" />
                   </div>
                   <div>
@@ -211,7 +196,7 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-3 rounded-xl glass border border-primary/20 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 glow-sm"
+                          className="p-3 rounded-xl border border-border hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
                         >
                           <Icon className="h-5 w-5" />
                         </a>
@@ -230,7 +215,7 @@ const ContactSection = ({ data }: ContactSectionProps) => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <div className="rounded-3xl card-premium p-8">
+            <div className="rounded-2xl border border-border bg-card/50 p-8">
               <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
               
               <Form {...form}>
@@ -245,7 +230,7 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                           <FormControl>
                             <Input 
                               placeholder="Your name" 
-                              className="rounded-xl glass border-border/50 focus:border-primary/50 bg-transparent h-12"
+                              className="rounded-xl border-border bg-background h-12 focus:border-accent"
                               {...field} 
                             />
                           </FormControl>
@@ -263,7 +248,7 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                             <Input 
                               placeholder="your@email.com" 
                               type="email" 
-                              className="rounded-xl glass border-border/50 focus:border-primary/50 bg-transparent h-12"
+                              className="rounded-xl border-border bg-background h-12 focus:border-accent"
                               {...field} 
                             />
                           </FormControl>
@@ -282,7 +267,7 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                         <FormControl>
                           <Input 
                             placeholder="What's this about?" 
-                            className="rounded-xl glass border-border/50 focus:border-primary/50 bg-transparent h-12"
+                            className="rounded-xl border-border bg-background h-12 focus:border-accent"
                             {...field} 
                           />
                         </FormControl>
@@ -300,7 +285,7 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                         <FormControl>
                           <Textarea
                             placeholder="Tell me about your project..."
-                            className="min-h-[140px] resize-none rounded-xl glass border-border/50 focus:border-primary/50 bg-transparent"
+                            className="min-h-[140px] resize-none rounded-xl border-border bg-background focus:border-accent"
                             {...field}
                           />
                         </FormControl>
@@ -312,12 +297,12 @@ const ContactSection = ({ data }: ContactSectionProps) => {
                   <Button 
                     type="submit" 
                     size="lg" 
-                    className="w-full rounded-full h-14 bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all duration-300 glow-primary text-lg font-medium" 
+                    className="w-full rounded-full h-14 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 text-lg font-medium" 
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
-                        <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin" />
                         Sending...
                       </span>
                     ) : (

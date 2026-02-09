@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Play, ExternalLink, Sparkles } from "lucide-react";
+import { Play, ExternalLink } from "lucide-react";
 
 interface MediaItem {
   id: string;
@@ -43,13 +43,9 @@ const MediaSection = ({ items = defaultItems }: MediaSectionProps) => {
 
   return (
     <section id="media" className="relative py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 mesh-gradient opacity-30" />
-      <motion.div
-        animate={{ x: [0, 40, 0], y: [0, -20, 0] }}
-        transition={{ duration: 18, repeat: Infinity }}
-        className="orb orb-primary w-[400px] h-[400px] -top-20 -right-40 opacity-20"
-      />
+      {/* Grid background */}
+      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
@@ -60,17 +56,11 @@ const MediaSection = ({ items = defaultItems }: MediaSectionProps) => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 mb-4 text-sm font-medium rounded-full glass border border-primary/20 text-primary"
-          >
-            <Sparkles className="h-4 w-4" />
+          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
             Watch & Learn
-          </motion.span>
+          </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="gradient-text">Media Showcase</span>
+            <span className="text-accent">Media Showcase</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Videos, presentations, and media highlights from my work.
@@ -88,35 +78,32 @@ const MediaSection = ({ items = defaultItems }: MediaSectionProps) => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="group cursor-pointer"
             >
-              <div className="relative aspect-video rounded-2xl overflow-hidden card-premium hover-lift">
+              <div className="relative aspect-video rounded-2xl overflow-hidden border border-border bg-card/50 hover:border-accent/30 transition-all duration-500 hover-lift">
                 {item.thumbnail_url ? (
                   <img
                     src={item.thumbnail_url}
                     alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 ) : (
-                  <div className="absolute inset-0 mesh-gradient flex items-center justify-center">
-                    <div className="w-24 h-24 rounded-full glass border border-primary/20 flex items-center justify-center">
+                  <div className="absolute inset-0 grid-bg flex items-center justify-center">
+                    <div className="w-24 h-24 rounded-full border border-border bg-card flex items-center justify-center">
                       <span className="text-4xl">🎬</span>
                     </div>
                   </div>
                 )}
 
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 {/* Play button */}
                 {item.type === "video" && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <motion.div 
                       whileHover={{ scale: 1.1 }}
-                      className="relative"
+                      className="w-16 h-16 rounded-full bg-accent flex items-center justify-center"
                     >
-                      <div className="absolute inset-0 rounded-full bg-primary blur-xl opacity-50" />
-                      <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg glow-primary">
-                        <Play className="h-6 w-6 text-primary-foreground ml-1" fill="currentColor" />
-                      </div>
+                      <Play className="h-6 w-6 text-accent-foreground ml-1" fill="currentColor" />
                     </motion.div>
                   </div>
                 )}
@@ -129,12 +116,12 @@ const MediaSection = ({ items = defaultItems }: MediaSectionProps) => {
                   )}
                 </div>
 
-                {/* External link icon */}
+                {/* External link */}
                 <a
                   href={item.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="absolute top-4 right-4 p-2.5 glass border border-primary/20 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-primary hover:text-primary-foreground"
+                  className="absolute top-4 right-4 p-2.5 rounded-xl border border-border bg-card opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-accent hover:text-accent-foreground hover:border-accent"
                 >
                   <ExternalLink className="h-4 w-4" />
                 </a>
