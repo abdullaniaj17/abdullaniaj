@@ -20,6 +20,7 @@ import {
   Search,
   ShieldX,
   Files,
+  ImageIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { User, Session } from "@supabase/supabase-js";
@@ -29,6 +30,7 @@ const sidebarItems = [
   { label: "Pages", icon: Files, path: "/admin/pages" },
   { label: "Projects", icon: FolderKanban, path: "/admin/projects" },
   { label: "Blog Posts", icon: FileText, path: "/admin/blog" },
+  { label: "Media Library", icon: ImageIcon, path: "/admin/media" },
   { label: "Testimonials", icon: MessageSquare, path: "/admin/testimonials" },
   { label: "FAQs", icon: HelpCircle, path: "/admin/faqs" },
   { label: "Services", icon: Briefcase, path: "/admin/services" },
