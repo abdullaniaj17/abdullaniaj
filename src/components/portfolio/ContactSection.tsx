@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram, Loader2 } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Instagram, Loader2, Facebook, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -36,6 +36,8 @@ interface ContactData {
     linkedin?: string;
     github?: string;
     instagram?: string;
+    facebook?: string;
+    whatsapp?: string;
   };
 }
 
@@ -89,6 +91,8 @@ const ContactSection = ({ data }: ContactSectionProps) => {
     linkedin: Linkedin,
     github: Github,
     instagram: Instagram,
+    facebook: Facebook,
+    whatsapp: MessageCircle,
   };
 
   const contactItems = [
