@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Code, Palette, Smartphone, Globe, Zap, Shield, ArrowRight } from "lucide-react";
+import { Code, Palette, Smartphone, Globe, Zap, Shield } from "lucide-react";
 
 interface Service {
   id: string;
@@ -73,7 +73,7 @@ const ServicesSection = ({ services = defaultServices }: ServicesSectionProps) =
   return (
     <section id="services" className="relative py-32 overflow-hidden">
       {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 grid-bg-dots-subtle" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -83,20 +83,18 @@ const ServicesSection = ({ services = defaultServices }: ServicesSectionProps) =
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
-            What I Offer
+          <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+            What I Do
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-accent">Services</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <span className="text-foreground">Services</span>{" "}
+            <span className="text-accent">Offered</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Comprehensive solutions tailored to meet your unique business needs.
-          </p>
         </motion.div>
 
-        {/* Services grid */}
+        {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {displayServices.map((service, index) => {
             const IconComponent = iconMap[service.icon || "code"] || Code;
@@ -108,49 +106,35 @@ const ServicesSection = ({ services = defaultServices }: ServicesSectionProps) =
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group"
+                className="group relative p-8 rounded-2xl bg-card/30 border border-border/30 hover:border-border/60 transition-all duration-500"
               >
-                <div className="relative h-full p-8 rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-500 hover-lift">
-                  {/* Number */}
-                  <div className="absolute top-6 right-6 text-5xl font-bold text-border group-hover:text-accent/20 transition-colors">
-                    {String(index + 1).padStart(2, '0')}
-                  </div>
-
-                  {/* Icon */}
-                  <div className="w-14 h-14 rounded-xl border border-border flex items-center justify-center mb-6 group-hover:bg-accent group-hover:border-accent transition-all duration-300">
-                    <IconComponent className="h-7 w-7 text-accent group-hover:text-accent-foreground transition-colors" />
-                  </div>
-                  
-                  {/* Title */}
-                  <h3 className="text-xl font-semibold mb-3 group-hover:text-accent transition-colors">
-                    {service.title}
-                  </h3>
-                  
-                  {/* Description */}
-                  {service.description && (
-                    <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                      {service.description}
-                    </p>
-                  )}
-                  
-                  {/* Features */}
-                  {service.features && service.features.length > 0 && (
-                    <ul className="space-y-2 mb-6">
-                      {service.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center text-sm text-muted-foreground">
-                          <span className="w-1 h-1 rounded-full bg-accent mr-3" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* Learn more */}
-                  <div className="flex items-center text-sm font-medium text-accent opacity-0 group-hover:opacity-100 transition-all duration-300">
-                    <span>Learn more</span>
-                    <ArrowRight className="h-4 w-4 ml-1" />
-                  </div>
+                {/* Icon */}
+                <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
+                  <IconComponent className="w-7 h-7 text-accent" />
                 </div>
+
+                {/* Content */}
+                <h3 className="text-xl font-semibold text-foreground mb-3">
+                  {service.title}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                  {service.description}
+                </p>
+
+                {/* Features */}
+                {service.features && service.features.length > 0 && (
+                  <ul className="space-y-2">
+                    {service.features.map((feature, i) => (
+                      <li key={i} className="flex items-center gap-2 text-sm text-foreground/70">
+                        <span className="w-1 h-1 rounded-full bg-accent" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Hover accent line */}
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </motion.div>
             );
           })}

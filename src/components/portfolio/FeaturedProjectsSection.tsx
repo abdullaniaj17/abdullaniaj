@@ -1,48 +1,27 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, ArrowRight } from "lucide-react";
+import { ExternalLink, Github, ArrowRight, ArrowUpRight } from "lucide-react";
 
 interface Project {
   id: string;
   title: string;
-  short_description?: string;
-  image_url?: string;
-  category?: string;
-  tags?: string[];
-  live_url?: string;
-  github_url?: string;
+  description?: string | null;
+  short_description?: string | null;
+  image_url?: string | null;
+  category?: string | null;
+  tags?: string[] | null;
+  live_url?: string | null;
+  github_url?: string | null;
 }
 
 interface FeaturedProjectsSectionProps {
   projects?: Project[];
 }
 
-const defaultProjects: Project[] = [
-  {
-    id: "1",
-    title: "E-Commerce Platform",
-    short_description: "A full-featured online store with payment processing and inventory management.",
-    category: "Web Development",
-    tags: ["React", "Node.js", "Stripe"],
-  },
-  {
-    id: "2",
-    title: "Mobile Banking App",
-    short_description: "Secure mobile banking solution with biometric authentication.",
-    category: "Mobile App",
-    tags: ["React Native", "TypeScript"],
-  },
-  {
-    id: "3",
-    title: "Analytics Dashboard",
-    short_description: "Real-time data visualization dashboard for business intelligence.",
-    category: "Data Visualization",
-    tags: ["D3.js", "PostgreSQL"],
-  },
-];
-
-const FeaturedProjectsSection = ({ projects = defaultProjects }: FeaturedProjectsSectionProps) => {
-  const displayProjects = projects.length > 0 ? projects.slice(0, 3) : defaultProjects;
+const FeaturedProjectsSection = ({ projects = [] }: FeaturedProjectsSectionProps) => {
+  if (projects.length === 0) return null;
+  
+  const displayProjects = projects.slice(0, 3);
 
   const scrollToPortfolio = () => {
     document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth" });
@@ -51,7 +30,7 @@ const FeaturedProjectsSection = ({ projects = defaultProjects }: FeaturedProject
   return (
     <section id="featured-projects" className="relative py-32 overflow-hidden">
       {/* Grid background */}
-      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 grid-bg-dots-subtle" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -61,102 +40,105 @@ const FeaturedProjectsSection = ({ projects = defaultProjects }: FeaturedProject
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
-            Selected Work
+          <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+            Featured Work
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="text-accent">Featured Projects</span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <span className="text-foreground">Highlighted</span>{" "}
+            <span className="text-accent">Projects</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            A selection of my recent work showcasing my skills in design and development.
-          </p>
         </motion.div>
 
-        {/* Projects grid */}
-        <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {/* Featured Projects */}
+        <div className="space-y-24 max-w-6xl mx-auto">
           {displayProjects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              className="group"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className={`grid lg:grid-cols-2 gap-10 lg:gap-16 items-center`}
             >
-              <div className="relative h-full rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-500 hover-lift overflow-hidden">
-                {/* Project Image */}
-                <div className="aspect-video relative overflow-hidden border-b border-border">
+              {/* Image */}
+              <div className={`relative ${index % 2 === 1 ? "lg:order-2" : ""}`}>
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-card border border-border/30 group">
                   {project.image_url ? (
                     <img
                       src={project.image_url}
                       alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="absolute inset-0 grid-bg flex items-center justify-center">
-                      <span className="text-5xl">🚀</span>
-                    </div>
-                  )}
-                  
-                  {/* Overlay with links */}
-                  <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-4">
-                    {project.live_url && (
-                      <a
-                        href={project.live_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-3 rounded-full border border-border bg-card hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
-                      >
-                        <ExternalLink className="h-5 w-5" />
-                      </a>
-                    )}
-                    {project.github_url && (
-                      <a
-                        href={project.github_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-3 rounded-full border border-border bg-card hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
-                      >
-                        <Github className="h-5 w-5" />
-                      </a>
-                    )}
-                  </div>
-
-                  {/* Category badge */}
-                  {project.category && (
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1.5 text-xs font-medium rounded-full border border-border bg-card text-muted-foreground">
-                        {project.category}
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-card to-muted">
+                      <span className="text-6xl font-bold text-muted-foreground/20">
+                        {project.title.charAt(0)}
                       </span>
                     </div>
                   )}
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors">
-                    {project.title}
-                  </h3>
-                  {project.short_description && (
-                    <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
-                      {project.short_description}
-                    </p>
-                  )}
                   
-                  {/* Tags */}
-                  {project.tags && project.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.slice(0, 3).map((tag, tagIndex) => (
-                        <span
-                          key={tagIndex}
-                          className="px-2.5 py-1 text-xs rounded-md border border-border text-muted-foreground"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                
+                {/* Decorative elements */}
+                <div className="absolute -z-10 -bottom-4 -right-4 w-full h-full rounded-2xl border border-border/20" />
+              </div>
+
+              {/* Content */}
+              <div className={index % 2 === 1 ? "lg:order-1" : ""}>
+                <span className="inline-block text-sm font-medium uppercase tracking-wider text-accent mb-4">
+                  {project.category}
+                </span>
+                
+                <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  {project.title}
+                </h3>
+                
+                <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+                  {project.description || project.short_description}
+                </p>
+
+                {/* Tags */}
+                {project.tags && project.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1.5 text-xs font-medium text-muted-foreground bg-muted/30 rounded-lg border border-border/30"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Links */}
+                <div className="flex items-center gap-4">
+                  {project.live_url && (
+                    <Button
+                      asChild
+                      className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full"
+                    >
+                      <a href={project.live_url} target="_blank" rel="noopener noreferrer">
+                        View Project
+                        <ArrowUpRight className="w-4 h-4 ml-2" />
+                      </a>
+                    </Button>
+                  )}
+                  {project.github_url && (
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="rounded-full border-border/50 hover:border-border"
+                    >
+                      <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                        <Github className="w-4 h-4 mr-2" />
+                        Source
+                      </a>
+                    </Button>
                   )}
                 </div>
               </div>
@@ -170,13 +152,13 @@ const FeaturedProjectsSection = ({ projects = defaultProjects }: FeaturedProject
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center mt-12"
+          className="text-center mt-16"
         >
           <Button 
             variant="outline" 
             size="lg" 
             onClick={scrollToPortfolio}
-            className="rounded-full border-border hover:bg-accent hover:text-accent-foreground hover:border-accent px-8"
+            className="rounded-full border-border/50 hover:border-border px-8"
           >
             View All Projects
             <ArrowRight className="ml-2 h-4 w-4" />
