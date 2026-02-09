@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight, Quote, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Testimonial {
@@ -59,7 +59,6 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
     setCurrentIndex((prev) => (prev - 1 + displayTestimonials.length) % displayTestimonials.length);
   };
 
-  // Auto-advance carousel
   useEffect(() => {
     const timer = setInterval(next, 6000);
     return () => clearInterval(timer);
@@ -83,8 +82,22 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
   };
 
   return (
-    <section id="testimonials" className="py-24">
-      <div className="container mx-auto px-4">
+    <section id="testimonials" className="relative py-32 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 mesh-gradient opacity-40" />
+      <motion.div
+        animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
+        transition={{ duration: 20, repeat: Infinity }}
+        className="orb orb-primary w-[400px] h-[400px] top-20 -left-40 opacity-20"
+      />
+      <motion.div
+        animate={{ x: [0, -30, 0], y: [0, 30, 0] }}
+        transition={{ duration: 25, repeat: Infinity }}
+        className="orb orb-accent w-[500px] h-[500px] -bottom-40 -right-40 opacity-20"
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -92,19 +105,33 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="text-sm font-medium text-primary uppercase tracking-wider">
+          <motion.span 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 mb-4 text-sm font-medium rounded-full glass border border-primary/20 text-primary"
+          >
+            <Sparkles className="h-4 w-4" />
             Client Feedback
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold mt-2">Testimonials</h2>
-          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+          </motion.span>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+            <span className="gradient-text">Testimonials</span>
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             What my clients say about working with me.
           </p>
         </motion.div>
 
+        {/* Testimonial card */}
         <div className="max-w-4xl mx-auto">
-          <div className="relative bg-card rounded-2xl border border-border p-8 md:p-12 overflow-hidden">
+          <div className="relative rounded-3xl card-premium p-8 md:p-12 overflow-hidden">
             {/* Quote icon */}
-            <Quote className="absolute top-8 left-8 h-12 w-12 text-primary/10" />
+            <div className="absolute top-8 left-8">
+              <Quote className="h-16 w-16 text-primary/10" />
+            </div>
+
+            {/* Decorative gradient */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl" />
 
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -114,52 +141,57 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="relative z-10"
               >
                 <div className="text-center">
                   {/* Avatar */}
-                  <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center mb-6 overflow-hidden">
-                    {currentTestimonial.client_avatar ? (
-                      <img
-                        src={currentTestimonial.client_avatar}
-                        alt={currentTestimonial.client_name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-2xl font-bold text-primary">
-                        {currentTestimonial.client_name.charAt(0)}
-                      </span>
-                    )}
+                  <div className="relative w-24 h-24 mx-auto mb-6">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-accent opacity-50 blur-lg" />
+                    <div className="relative w-24 h-24 rounded-full glass border-2 border-primary/30 flex items-center justify-center overflow-hidden">
+                      {currentTestimonial.client_avatar ? (
+                        <img
+                          src={currentTestimonial.client_avatar}
+                          alt={currentTestimonial.client_name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-3xl font-bold gradient-text">
+                          {currentTestimonial.client_name.charAt(0)}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Rating */}
                   {currentTestimonial.rating && (
-                    <div className="flex justify-center gap-1 mb-4">
+                    <div className="flex justify-center gap-1 mb-6">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <span
+                        <Star
                           key={i}
-                          className={`text-lg ${i < currentTestimonial.rating! ? "text-yellow-500" : "text-muted"}`}
-                        >
-                          ★
-                        </span>
+                          className={`h-5 w-5 ${
+                            i < currentTestimonial.rating! 
+                              ? "text-yellow-500 fill-yellow-500" 
+                              : "text-muted"
+                          }`}
+                        />
                       ))}
                     </div>
                   )}
 
                   {/* Content */}
-                  <blockquote className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-6 italic">
+                  <blockquote className="text-xl md:text-2xl text-foreground/90 leading-relaxed mb-8 font-light italic">
                     "{currentTestimonial.content}"
                   </blockquote>
 
                   {/* Client info */}
                   <div>
-                    <p className="font-semibold text-lg">{currentTestimonial.client_name}</p>
+                    <p className="font-semibold text-lg gradient-text">{currentTestimonial.client_name}</p>
                     {(currentTestimonial.client_title || currentTestimonial.client_company) && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground mt-1">
                         {currentTestimonial.client_title}
                         {currentTestimonial.client_title && currentTestimonial.client_company && " at "}
-                        {currentTestimonial.client_company}
+                        <span className="text-primary">{currentTestimonial.client_company}</span>
                       </p>
                     )}
                   </div>
@@ -169,14 +201,14 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
 
             {/* Navigation */}
             {displayTestimonials.length > 1 && (
-              <div className="flex justify-center items-center gap-4 mt-8">
+              <div className="flex justify-center items-center gap-6 mt-10">
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={prev}
-                  className="rounded-full"
+                  className="rounded-full glass border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-5 w-5" />
                 </Button>
                 
                 <div className="flex gap-2">
@@ -187,8 +219,10 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
                         setDirection(index > currentIndex ? 1 : -1);
                         setCurrentIndex(index);
                       }}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        index === currentIndex ? "bg-primary w-6" : "bg-muted-foreground/30"
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        index === currentIndex 
+                          ? "w-8 bg-gradient-to-r from-primary to-accent" 
+                          : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                       }`}
                     />
                   ))}
@@ -198,9 +232,9 @@ const TestimonialsSection = ({ testimonials = defaultTestimonials }: Testimonial
                   variant="outline"
                   size="icon"
                   onClick={next}
-                  className="rounded-full"
+                  className="rounded-full glass border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-5 w-5" />
                 </Button>
               </div>
             )}
