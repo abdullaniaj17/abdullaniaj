@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -14,11 +15,38 @@ const navItems = [
   { label: "Contact", href: "/contact" },
 ];
 
+interface BrandingSettings {
+  site_name: string;
+  logo_url: string;
+  use_logo: boolean;
+}
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [branding, setBranding] = useState<BrandingSettings>({
+    site_name: "Portfolio",
+    logo_url: "",
+    use_logo: false,
+  });
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+
+  useEffect(() => {
+    const fetchBranding = async () => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("setting_value")
+        .eq("setting_key", "branding")
+        .maybeSingle();
+
+      if (data) {
+        setBranding(data.setting_value as unknown as BrandingSettings);
+      }
+    };
+
+    fetchBranding();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,7 +94,11 @@ const Navbar = () => {
               to="/"
               className="text-xl font-bold tracking-tight hover:text-primary transition-colors"
             >
-              Portfolio
+              {branding.use_logo && branding.logo_url ? (
+                <img src={branding.logo_url} alt={branding.site_name} className="h-8 object-contain" />
+              ) : (
+                branding.site_name || "Portfolio"
+              )}
             </Link>
 
             {/* Desktop Navigation */}
