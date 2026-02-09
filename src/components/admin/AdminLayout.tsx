@@ -9,7 +9,6 @@ import {
   MessageSquare,
   HelpCircle,
   Settings,
-  Users,
   Briefcase,
   Zap,
   Mail,
@@ -17,6 +16,8 @@ import {
   Menu,
   X,
   Home,
+  Code,
+  Search,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { User, Session } from "@supabase/supabase-js";
@@ -30,7 +31,8 @@ const sidebarItems = [
   { label: "Services", icon: Briefcase, path: "/admin/services" },
   { label: "Skills", icon: Zap, path: "/admin/skills" },
   { label: "Contact Submissions", icon: Mail, path: "/admin/submissions" },
-  { label: "Custom Code", icon: FileText, path: "/admin/custom-code" },
+  { label: "Custom Code", icon: Code, path: "/admin/custom-code" },
+  { label: "SEO Settings", icon: Search, path: "/admin/seo" },
   { label: "Site Settings", icon: Settings, path: "/admin/settings" },
 ];
 

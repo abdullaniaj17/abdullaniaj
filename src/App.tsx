@@ -16,7 +16,9 @@ import AdminSkills from "./pages/admin/Skills";
 import AdminSubmissions from "./pages/admin/Submissions";
 import AdminSettings from "./pages/admin/Settings";
 import AdminCustomCode from "./pages/admin/CustomCode";
+import AdminSEO from "./pages/admin/SEO";
 import CustomCodeInjector from "./components/CustomCodeInjector";
+import SEOHead from "./components/SEOHead";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +29,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <CustomCodeInjector />
+      <SEOHead />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -41,6 +44,7 @@ const App = () => (
             <Route path="skills" element={<AdminSkills />} />
             <Route path="submissions" element={<AdminSubmissions />} />
             <Route path="custom-code" element={<AdminCustomCode />} />
+            <Route path="seo" element={<AdminSEO />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
           <Route path="*" element={<NotFound />} />
