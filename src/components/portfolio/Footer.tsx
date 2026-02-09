@@ -23,13 +23,9 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
   const hasSocialLinks = Object.values(socialLinks).some((url) => url);
 
   return (
-    <footer className="relative py-16 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-card/50" />
-      <div className="absolute inset-0 mesh-gradient opacity-20" />
-      
-      {/* Top border gradient */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+    <footer className="relative py-16 overflow-hidden border-t border-border">
+      {/* Grid background */}
+      <div className="absolute inset-0 grid-bg opacity-20" />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div 
@@ -52,9 +48,9 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="p-3 rounded-xl glass border border-border/50 hover:border-primary/50 hover:text-primary transition-all duration-300"
+                    className="p-3 rounded-xl border border-border hover:border-accent/50 hover:text-accent transition-all duration-300"
                   >
                     <Icon className="h-5 w-5" />
                   </motion.a>
@@ -64,13 +60,13 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
           )}
 
           {/* Divider */}
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+          <div className="w-24 h-px bg-border" />
 
           {/* Copyright */}
           <div className="text-center">
             <p className="flex items-center justify-center gap-2 text-muted-foreground">
               © {currentYear} All rights reserved. Made with
-              <Heart className="h-4 w-4 text-primary fill-primary animate-pulse" />
+              <Heart className="h-4 w-4 text-accent fill-accent" />
             </p>
           </div>
         </motion.div>

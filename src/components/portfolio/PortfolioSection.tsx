@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, Sparkles } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 
 interface Project {
   id: string;
@@ -76,13 +76,9 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
 
   return (
     <section id="portfolio" className="relative py-32 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 mesh-gradient opacity-30" />
-      <motion.div
-        animate={{ x: [0, 50, 0], y: [0, -40, 0] }}
-        transition={{ duration: 20, repeat: Infinity }}
-        className="orb orb-accent w-[500px] h-[500px] -top-20 -right-40 opacity-20"
-      />
+      {/* Grid background */}
+      <div className="absolute inset-0 grid-bg opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
@@ -93,17 +89,11 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <motion.span 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 mb-4 text-sm font-medium rounded-full glass border border-primary/20 text-primary"
-          >
-            <Sparkles className="h-4 w-4" />
+          <span className="inline-block px-4 py-2 mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground border border-border rounded-full">
             My Work
-          </motion.span>
+          </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            <span className="gradient-text">Portfolio</span>
+            <span className="text-accent">Portfolio</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Explore my complete collection of projects across various domains.
@@ -126,8 +116,8 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
               onClick={() => setActiveCategory(category as string)}
               className={`rounded-full transition-all duration-300 ${
                 activeCategory === category 
-                  ? "bg-gradient-to-r from-primary to-accent glow-sm" 
-                  : "glass border-border/50 hover:border-primary/50"
+                  ? "bg-accent text-accent-foreground border-accent" 
+                  : "border-border hover:border-accent/50"
               }`}
             >
               {category}
@@ -148,29 +138,29 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 className="group"
               >
-                <div className="relative h-full rounded-2xl card-premium hover-lift overflow-hidden">
+                <div className="relative h-full rounded-2xl border border-border bg-card/50 hover:border-accent/30 transition-all duration-500 hover-lift overflow-hidden">
                   {/* Image */}
-                  <div className="aspect-video relative overflow-hidden">
+                  <div className="aspect-video relative overflow-hidden border-b border-border">
                     {project.image_url ? (
                       <img
                         src={project.image_url}
                         alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     ) : (
-                      <div className="absolute inset-0 mesh-gradient flex items-center justify-center">
+                      <div className="absolute inset-0 grid-bg flex items-center justify-center">
                         <span className="text-4xl">💼</span>
                       </div>
                     )}
                     
                     {/* Hover overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-4 gap-3">
+                    <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-3">
                       {project.live_url && (
                         <a
                           href={project.live_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2.5 rounded-full glass border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
+                          className="p-2.5 rounded-full border border-border bg-card hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
                         >
                           <ExternalLink className="h-4 w-4" />
                         </a>
@@ -180,7 +170,7 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
                           href={project.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2.5 rounded-full glass border border-primary/30 hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110"
+                          className="p-2.5 rounded-full border border-border bg-card hover:bg-accent hover:text-accent-foreground hover:border-accent transition-all duration-300"
                         >
                           <Github className="h-4 w-4" />
                         </a>
@@ -190,7 +180,7 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
                     {/* Category badge */}
                     {project.category && (
                       <div className="absolute top-3 left-3">
-                        <span className="px-2.5 py-1 text-xs font-medium rounded-full glass border border-primary/20 text-primary">
+                        <span className="px-2.5 py-1 text-xs font-medium rounded-full border border-border bg-card text-muted-foreground">
                           {project.category}
                         </span>
                       </div>
@@ -199,7 +189,7 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
 
                   {/* Content */}
                   <div className="p-5">
-                    <h3 className="text-lg font-semibold mb-1.5 group-hover:text-primary transition-colors">
+                    <h3 className="text-lg font-semibold mb-1.5 group-hover:text-accent transition-colors">
                       {project.title}
                     </h3>
                     {project.short_description && (
@@ -213,7 +203,7 @@ const PortfolioSection = ({ projects = defaultProjects }: PortfolioSectionProps)
                         {project.tags.slice(0, 3).map((tag, tagIndex) => (
                           <span
                             key={tagIndex}
-                            className="px-2 py-0.5 text-xs rounded-md bg-muted/50 text-muted-foreground border border-border/50"
+                            className="px-2 py-0.5 text-xs rounded-md border border-border text-muted-foreground"
                           >
                             {tag}
                           </span>

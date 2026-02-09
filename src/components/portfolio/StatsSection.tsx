@@ -63,49 +63,24 @@ const StatsSection = ({ stats }: StatsSectionProps) => {
 
   return (
     <section id="stats" className="relative py-24 overflow-hidden" ref={ref}>
-      {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary opacity-90" />
-      
-      {/* Animated orbs */}
-      <motion.div
-        animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
-        transition={{ duration: 15, repeat: Infinity }}
-        className="absolute w-[300px] h-[300px] rounded-full bg-white/10 blur-3xl -top-20 -left-20"
-      />
-      <motion.div
-        animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
-        transition={{ duration: 20, repeat: Infinity }}
-        className="absolute w-[400px] h-[400px] rounded-full bg-white/10 blur-3xl -bottom-40 -right-20"
-      />
-
-      {/* Grid pattern */}
-      <div 
-        className="absolute inset-0 opacity-10"
-        style={{
-          backgroundImage: `linear-gradient(white 1px, transparent 1px),
-                           linear-gradient(90deg, white 1px, transparent 1px)`,
-          backgroundSize: '80px 80px',
-        }}
-      />
+      {/* Background */}
+      <div className="absolute inset-0 bg-accent" />
+      <div className="absolute inset-0 grid-bg-large opacity-20" />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
           {displayStats.map((stat, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.15 }}
               className="text-center"
             >
-              <div className="relative inline-block">
-                {/* Glow effect */}
-                <div className="absolute inset-0 blur-2xl bg-white/30 rounded-full scale-150" />
-                <div className="relative text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2">
-                  <AnimatedCounter value={stat.value} inView={isInView} />
-                </div>
+              <div className="text-5xl md:text-6xl lg:text-7xl font-bold text-accent-foreground mb-2">
+                <AnimatedCounter value={stat.value} inView={isInView} />
               </div>
-              <div className="text-white/80 text-sm md:text-base font-medium tracking-wide uppercase">
+              <div className="text-accent-foreground/70 text-sm md:text-base font-medium uppercase tracking-wider">
                 {stat.label}
               </div>
             </motion.div>
