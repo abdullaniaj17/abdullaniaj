@@ -30,6 +30,7 @@ const sidebarItems = [
   { label: "Services", icon: Briefcase, path: "/admin/services" },
   { label: "Skills", icon: Zap, path: "/admin/skills" },
   { label: "Contact Submissions", icon: Mail, path: "/admin/submissions" },
+  { label: "Custom Code", icon: FileText, path: "/admin/custom-code" },
   { label: "Site Settings", icon: Settings, path: "/admin/settings" },
 ];
 
