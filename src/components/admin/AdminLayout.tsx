@@ -18,6 +18,7 @@ import {
   Home,
   Code,
   Search,
+  ShieldX,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { User, Session } from "@supabase/supabase-js";
@@ -42,6 +43,7 @@ const AdminLayout = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -49,10 +51,15 @@ const AdminLayout = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setIsLoading(false);
       
       if (!session?.user) {
+        setIsLoading(false);
         navigate("/auth");
+      } else {
+        // Check admin role after auth state changes
+        setTimeout(() => {
+          checkAdminRole(session.user.id);
+        }, 0);
       }
     });
 
@@ -60,19 +67,37 @@ const AdminLayout = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setIsLoading(false);
       
       if (!session?.user) {
+        setIsLoading(false);
         navigate("/auth");
+      } else {
+        checkAdminRole(session.user.id);
       }
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const checkAdminRole = async (userId: string) => {
+    try {
+      const { data, error } = await supabase.rpc('has_role', {
+        _user_id: userId,
+        _role: 'admin'
+      });
+      
+      setIsAdmin(data === true);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error checking admin role:', error);
+      setIsAdmin(false);
+      setIsLoading(false);
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/auth");
+    navigate("/");
   };
 
   if (isLoading) {
@@ -88,6 +113,32 @@ const AdminLayout = () => {
 
   if (!user) {
     return null;
+  }
+
+  // Show access denied if not admin
+  if (isAdmin === false) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-4 p-8">
+          <ShieldX className="w-16 h-16 text-destructive mx-auto" />
+          <h1 className="text-2xl font-bold">Access Denied</h1>
+          <p className="text-muted-foreground max-w-md">
+            You don't have permission to access the admin dashboard. 
+            Please contact the site administrator if you believe this is an error.
+          </p>
+          <div className="flex gap-2 justify-center pt-4">
+            <Button variant="outline" onClick={() => navigate("/")}>
+              <Home className="h-4 w-4 mr-2" />
+              Go Home
+            </Button>
+            <Button variant="ghost" onClick={handleLogout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
