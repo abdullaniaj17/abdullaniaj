@@ -107,7 +107,7 @@
   }
 
   body {
-    background: linear-gradient(135deg, #000000 0%, #0A0A0A 50%, #141414 100%);
+    background: linear-gradient(135deg, #000000 0%, #080808 50%, #111111 100%);
     background-attachment: fixed;
     color: #FFFFFF;
     min-height: 100vh;
@@ -125,9 +125,9 @@
     color: #FFFFFF;
   }
 
-  /* Orange gradient text utility */
+  /* Mango-orange gradient text utility */
   .text-gradient-orange {
-    background: linear-gradient(90deg, #FF7A18 0%, #FF9F1C 50%, #FFC15A 100%);
+    background: linear-gradient(90deg, #D84A16 0%, #E45A1F 50%, #F06A2A 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
