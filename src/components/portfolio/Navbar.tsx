@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const navItems = [
   { label: "Home", href: "#hero" },
@@ -70,14 +69,8 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* Admin Link & Mobile Menu Button */}
+            {/* Mobile Menu Button */}
             <div className="flex items-center gap-2">
-              <Link to="/admin">
-                <Button variant="outline" size="sm" className="hidden md:flex">
-                  Admin
-                </Button>
-              </Link>
-              
               <Button
                 variant="ghost"
                 size="icon"
@@ -117,13 +110,6 @@ const Navbar = () => {
                       {item.label}
                     </button>
                   ))}
-                  <Link
-                    to="/admin"
-                    className="w-full text-left px-4 py-3 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Admin Dashboard
-                  </Link>
                 </div>
               </div>
             </div>
