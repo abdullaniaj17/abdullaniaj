@@ -146,16 +146,29 @@ const AdminSettings = () => {
   }, []);
 
   const saveSetting = async (key: string, value: object) => {
-    const { error } = await supabase
+    // Check if record exists first
+    const { data: existing } = await supabase
       .from("site_settings")
-      .update({ setting_value: JSON.parse(JSON.stringify(value)) })
-      .eq("setting_key", key);
+      .select("id")
+      .eq("setting_key", key)
+      .maybeSingle();
 
-    if (error) {
-      await supabase.from("site_settings").insert([{
-        setting_key: key,
-        setting_value: JSON.parse(JSON.stringify(value)),
-      }]);
+    if (existing) {
+      // Update existing record
+      const { error } = await supabase
+        .from("site_settings")
+        .update({ setting_value: JSON.parse(JSON.stringify(value)) })
+        .eq("setting_key", key);
+      if (error) throw error;
+    } else {
+      // Insert new record
+      const { error } = await supabase
+        .from("site_settings")
+        .insert({
+          setting_key: key,
+          setting_value: JSON.parse(JSON.stringify(value)),
+        });
+      if (error) throw error;
     }
   };
 
