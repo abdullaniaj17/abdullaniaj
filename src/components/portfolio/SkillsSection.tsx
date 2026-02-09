@@ -1,5 +1,10 @@
 import { motion } from "framer-motion";
-import { Code, Palette, Database, Globe, Smartphone, Zap } from "lucide-react";
+import { 
+  Code, Palette, Database, Globe, Smartphone, Zap, Search, Settings,
+  Target, TrendingUp, BarChart, LineChart, PieChart, DollarSign, Users,
+  ShoppingCart, Mail, MessageSquare, Share2, Megaphone, Rocket, Award,
+  Briefcase, Building, Calculator, CreditCard, FileText
+} from "lucide-react";
 
 interface Skill {
   id: string;
@@ -14,12 +19,12 @@ interface SkillsSectionProps {
 }
 
 const defaultSkills: Skill[] = [
-  { id: "1", name: "React / Next.js", category: "Frontend", proficiency: 95, icon: "code" },
-  { id: "2", name: "TypeScript", category: "Frontend", proficiency: 90, icon: "code" },
-  { id: "3", name: "Node.js", category: "Backend", proficiency: 85, icon: "database" },
-  { id: "4", name: "UI/UX Design", category: "Design", proficiency: 80, icon: "palette" },
-  { id: "5", name: "PostgreSQL", category: "Backend", proficiency: 85, icon: "database" },
-  { id: "6", name: "Mobile Development", category: "Mobile", proficiency: 75, icon: "smartphone" },
+  { id: "1", name: "Google Ads", category: "Advertising", proficiency: 95, icon: "target" },
+  { id: "2", name: "Analytics", category: "Data", proficiency: 90, icon: "bar-chart" },
+  { id: "3", name: "SEO", category: "Marketing", proficiency: 85, icon: "search" },
+  { id: "4", name: "PPC", category: "Advertising", proficiency: 90, icon: "trending-up" },
+  { id: "5", name: "Conversion Tracking", category: "Analytics", proficiency: 85, icon: "pie-chart" },
+  { id: "6", name: "Lead Generation", category: "Marketing", proficiency: 88, icon: "users" },
 ];
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -29,6 +34,27 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   globe: Globe,
   smartphone: Smartphone,
   zap: Zap,
+  search: Search,
+  settings: Settings,
+  target: Target,
+  "trending-up": TrendingUp,
+  "bar-chart": BarChart,
+  "line-chart": LineChart,
+  "pie-chart": PieChart,
+  "dollar-sign": DollarSign,
+  users: Users,
+  "shopping-cart": ShoppingCart,
+  mail: Mail,
+  "message-square": MessageSquare,
+  share2: Share2,
+  megaphone: Megaphone,
+  rocket: Rocket,
+  award: Award,
+  briefcase: Briefcase,
+  building: Building,
+  calculator: Calculator,
+  "credit-card": CreditCard,
+  "file-text": FileText,
 };
 
 const SkillsSection = ({ skills = defaultSkills }: SkillsSectionProps) => {
@@ -49,7 +75,7 @@ const SkillsSection = ({ skills = defaultSkills }: SkillsSectionProps) => {
           </span>
           <h2 className="text-3xl md:text-4xl font-bold mt-2">Skills & Technologies</h2>
           <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            A comprehensive toolkit built over years of experience in software development and design.
+            A comprehensive toolkit built over years of experience in digital marketing and advertising.
           </p>
         </motion.div>
 

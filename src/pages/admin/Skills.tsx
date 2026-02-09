@@ -20,8 +20,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { 
+  Plus, Pencil, Trash2, Code, Palette, Database, Globe, 
+  Smartphone, Zap, Search, Settings, Target, TrendingUp,
+  BarChart, LineChart, PieChart, DollarSign, Users, ShoppingCart,
+  Mail, MessageSquare, Share2, Megaphone, Rocket, Award,
+  Briefcase, Building, Calculator, CreditCard, FileText
+} from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 interface Skill {
   id: string;
@@ -32,6 +39,37 @@ interface Skill {
   is_visible: boolean | null;
   display_order: number | null;
 }
+
+// Available icons for skills
+const availableIcons = [
+  { name: "code", icon: Code, label: "Code" },
+  { name: "palette", icon: Palette, label: "Design" },
+  { name: "database", icon: Database, label: "Database" },
+  { name: "globe", icon: Globe, label: "Web" },
+  { name: "smartphone", icon: Smartphone, label: "Mobile" },
+  { name: "zap", icon: Zap, label: "Fast" },
+  { name: "search", icon: Search, label: "Search/SEO" },
+  { name: "settings", icon: Settings, label: "Settings" },
+  { name: "target", icon: Target, label: "Target" },
+  { name: "trending-up", icon: TrendingUp, label: "Growth" },
+  { name: "bar-chart", icon: BarChart, label: "Analytics" },
+  { name: "line-chart", icon: LineChart, label: "Charts" },
+  { name: "pie-chart", icon: PieChart, label: "Reports" },
+  { name: "dollar-sign", icon: DollarSign, label: "Money" },
+  { name: "users", icon: Users, label: "Users" },
+  { name: "shopping-cart", icon: ShoppingCart, label: "E-commerce" },
+  { name: "mail", icon: Mail, label: "Email" },
+  { name: "message-square", icon: MessageSquare, label: "Chat" },
+  { name: "share2", icon: Share2, label: "Share" },
+  { name: "megaphone", icon: Megaphone, label: "Marketing" },
+  { name: "rocket", icon: Rocket, label: "Launch" },
+  { name: "award", icon: Award, label: "Award" },
+  { name: "briefcase", icon: Briefcase, label: "Business" },
+  { name: "building", icon: Building, label: "Corporate" },
+  { name: "calculator", icon: Calculator, label: "Calculate" },
+  { name: "credit-card", icon: CreditCard, label: "Payment" },
+  { name: "file-text", icon: FileText, label: "Document" },
+];
 
 const AdminSkills = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -44,7 +82,7 @@ const AdminSkills = () => {
     name: "",
     category: "",
     proficiency: 80,
-    icon: "",
+    icon: "code",
     is_visible: true,
     display_order: 0,
   });
@@ -72,7 +110,7 @@ const AdminSkills = () => {
       name: "",
       category: "",
       proficiency: 80,
-      icon: "",
+      icon: "code",
       is_visible: true,
       display_order: skills.length,
     });
@@ -86,7 +124,7 @@ const AdminSkills = () => {
         name: skill.name,
         category: skill.category || "",
         proficiency: skill.proficiency || 80,
-        icon: skill.icon || "",
+        icon: skill.icon || "code",
         is_visible: skill.is_visible ?? true,
         display_order: skill.display_order || 0,
       });
@@ -147,6 +185,11 @@ const AdminSkills = () => {
     }
   };
 
+  const getIconComponent = (iconName: string | null) => {
+    const found = availableIcons.find(i => i.name === iconName);
+    return found ? found.icon : Code;
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -159,8 +202,8 @@ const AdminSkills = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Skills</h1>
-          <p className="text-muted-foreground">Manage your skill set</p>
+          <h1 className="text-3xl font-bold">Skills & Technologies</h1>
+          <p className="text-muted-foreground">Manage your skill set with icons</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
@@ -169,7 +212,7 @@ const AdminSkills = () => {
               Add Skill
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingSkill ? "Edit Skill" : "Add New Skill"}</DialogTitle>
             </DialogHeader>
@@ -179,28 +222,48 @@ const AdminSkills = () => {
                 <Input
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="React / Next.js"
+                  placeholder="Google Ads Expert"
                   required
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Category</Label>
-                  <Input
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    placeholder="Frontend"
-                  />
-                </div>
-                <div>
-                  <Label>Icon (code, palette, database, globe, smartphone, zap)</Label>
-                  <Input
-                    value={formData.icon}
-                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                    placeholder="code"
-                  />
-                </div>
+              <div>
+                <Label>Category</Label>
+                <Input
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  placeholder="Marketing, Advertising, Analytics..."
+                />
               </div>
+              
+              {/* Icon Picker */}
+              <div>
+                <Label className="mb-3 block">Select Icon</Label>
+                <div className="grid grid-cols-6 gap-2 p-3 bg-muted/50 rounded-lg max-h-48 overflow-y-auto">
+                  {availableIcons.map((iconOption) => {
+                    const IconComp = iconOption.icon;
+                    return (
+                      <button
+                        key={iconOption.name}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, icon: iconOption.name })}
+                        className={cn(
+                          "p-2 rounded-lg flex flex-col items-center gap-1 transition-all hover:bg-background",
+                          formData.icon === iconOption.name 
+                            ? "bg-primary text-primary-foreground ring-2 ring-primary" 
+                            : "bg-background border border-border"
+                        )}
+                        title={iconOption.label}
+                      >
+                        <IconComp className="h-5 w-5" />
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Selected: {availableIcons.find(i => i.name === formData.icon)?.label || "Code"}
+                </p>
+              </div>
+
               <div>
                 <Label>Proficiency (0-100)</Label>
                 <Input
@@ -210,7 +273,14 @@ const AdminSkills = () => {
                   value={formData.proficiency}
                   onChange={(e) => setFormData({ ...formData, proficiency: parseInt(e.target.value) || 80 })}
                 />
+                <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-primary rounded-full transition-all"
+                    style={{ width: `${formData.proficiency}%` }}
+                  />
+                </div>
               </div>
+              
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Display Order</Label>
@@ -244,6 +314,7 @@ const AdminSkills = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Icon</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Proficiency</TableHead>
@@ -254,41 +325,49 @@ const AdminSkills = () => {
             <TableBody>
               {skills.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     No skills yet. Add your first skill!
                   </TableCell>
                 </TableRow>
               ) : (
-                skills.map((skill) => (
-                  <TableRow key={skill.id}>
-                    <TableCell className="font-medium">{skill.name}</TableCell>
-                    <TableCell>{skill.category || "-"}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary rounded-full"
-                            style={{ width: `${skill.proficiency || 0}%` }}
-                          />
+                skills.map((skill) => {
+                  const IconComp = getIconComponent(skill.icon);
+                  return (
+                    <TableRow key={skill.id}>
+                      <TableCell>
+                        <div className="p-2 rounded-lg bg-primary/10 text-primary inline-flex">
+                          <IconComp className="h-4 w-4" />
                         </div>
-                        <span className="text-sm text-muted-foreground">{skill.proficiency}%</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${skill.is_visible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                        {skill.is_visible ? "Yes" : "No"}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => openDialog(skill)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(skill.id)}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
+                      </TableCell>
+                      <TableCell className="font-medium">{skill.name}</TableCell>
+                      <TableCell>{skill.category || "-"}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-primary rounded-full"
+                              style={{ width: `${skill.proficiency || 0}%` }}
+                            />
+                          </div>
+                          <span className="text-sm text-muted-foreground">{skill.proficiency}%</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-xs ${skill.is_visible ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                          {skill.is_visible ? "Yes" : "No"}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="icon" onClick={() => openDialog(skill)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => handleDelete(skill.id)}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
