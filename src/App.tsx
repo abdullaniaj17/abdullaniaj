@@ -17,10 +17,19 @@ import AdminSubmissions from "./pages/admin/Submissions";
 import AdminSettings from "./pages/admin/Settings";
 import AdminCustomCode from "./pages/admin/CustomCode";
 import AdminSEO from "./pages/admin/SEO";
+import AdminPages from "./pages/admin/Pages";
 import CustomCodeInjector from "./components/CustomCodeInjector";
 import SEOHead from "./components/SEOHead";
 import FaviconManager from "./components/FaviconManager";
 import NotFound from "./pages/NotFound";
+import AboutPage from "./pages/AboutPage";
+import SkillsPage from "./pages/SkillsPage";
+import PortfolioPage from "./pages/PortfolioPage";
+import ServicesPage from "./pages/ServicesPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
+import ContactPage from "./pages/ContactPage";
+import CustomPage from "./pages/CustomPage";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +45,14 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/skills" element={<SkillsPage />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/page/:slug" element={<CustomPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="projects" element={<AdminProjects />} />
@@ -47,6 +64,7 @@ const App = () => (
             <Route path="submissions" element={<AdminSubmissions />} />
             <Route path="custom-code" element={<AdminCustomCode />} />
             <Route path="seo" element={<AdminSEO />} />
+            <Route path="pages" element={<AdminPages />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
           <Route path="*" element={<NotFound />} />

@@ -2,20 +2,23 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
-  { label: "Home", href: "#hero" },
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Portfolio", href: "#portfolio" },
-  { label: "Services", href: "#services" },
-  { label: "Blog", href: "#blog" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Skills", href: "/skills" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Services", href: "/services" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,12 +29,22 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
+  const scrollToSection = (sectionId: string) => {
+    const element = document.querySelector(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
     setIsMobileMenuOpen(false);
+  };
+
+  const handleNavClick = (href: string) => {
+    // If on homepage and clicking a section link, scroll to it
+    if (isHomePage && href !== "/") {
+      const sectionId = `#${href.replace("/", "")}`;
+      scrollToSection(sectionId);
+    } else {
+      setIsMobileMenuOpen(false);
+    }
   };
 
   return (
@@ -49,23 +62,28 @@ const Navbar = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <button
-              onClick={() => scrollToSection("#hero")}
+            <Link
+              to="/"
               className="text-xl font-bold tracking-tight hover:text-primary transition-colors"
             >
               Portfolio
-            </button>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
               {navItems.map((item) => (
-                <button
+                <Link
                   key={item.label}
-                  onClick={() => scrollToSection(item.href)}
-                  className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
+                  to={item.href}
+                  onClick={() => handleNavClick(item.href)}
+                  className={`px-4 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-muted ${
+                    location.pathname === item.href
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
                   {item.label}
-                </button>
+                </Link>
               ))}
             </div>
 
@@ -102,13 +120,18 @@ const Navbar = () => {
               <div className="container mx-auto px-4 py-4">
                 <div className="flex flex-col gap-1">
                   {navItems.map((item) => (
-                    <button
+                    <Link
                       key={item.label}
-                      onClick={() => scrollToSection(item.href)}
-                      className="w-full text-left px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                      to={item.href}
+                      onClick={() => handleNavClick(item.href)}
+                      className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                        location.pathname === item.href
+                          ? "text-primary bg-primary/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      }`}
                     >
                       {item.label}
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </div>

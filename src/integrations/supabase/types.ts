@@ -161,6 +161,60 @@ export type Database = {
         }
         Relationships: []
       }
+      pages: {
+        Row: {
+          content: string | null
+          created_at: string
+          display_order: number | null
+          excerpt: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean | null
+          is_system: boolean | null
+          page_type: string
+          seo_description: string | null
+          seo_keywords: string[] | null
+          seo_title: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          display_order?: number | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          is_system?: boolean | null
+          page_type?: string
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          display_order?: number | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          is_system?: boolean | null
+          page_type?: string
+          seo_description?: string | null
+          seo_keywords?: string[] | null
+          seo_title?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
