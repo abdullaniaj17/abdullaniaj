@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Save, User, Mail, MapPin, Share2 } from "lucide-react";
+import { Save, User, Mail, MapPin, Share2, Type } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import FaviconUploader from "@/components/admin/FaviconUploader";
 
 interface HeroSettings {
@@ -43,6 +44,12 @@ interface StatsSettings {
 
 interface FaviconSettings {
   favicon_url: string;
+}
+
+interface BrandingSettings {
+  site_name: string;
+  logo_url: string;
+  use_logo: boolean;
 }
 
 const AdminSettings = () => {
@@ -91,6 +98,12 @@ const AdminSettings = () => {
     favicon_url: "",
   });
 
+  const [branding, setBranding] = useState<BrandingSettings>({
+    site_name: "Portfolio",
+    logo_url: "",
+    use_logo: false,
+  });
+
   const [highlightsText, setHighlightsText] = useState("");
 
   useEffect(() => {
@@ -119,6 +132,9 @@ const AdminSettings = () => {
               break;
             case "favicon":
               setFavicon(value as unknown as FaviconSettings);
+              break;
+            case "branding":
+              setBranding(value as unknown as BrandingSettings);
               break;
           }
         });
@@ -157,6 +173,7 @@ const AdminSettings = () => {
         saveSetting("contact", contact),
         saveSetting("stats", stats),
         saveSetting("favicon", favicon),
+        saveSetting("branding", branding),
       ]);
 
       toast({ title: "Success", description: "Settings saved successfully!" });
@@ -197,6 +214,53 @@ const AdminSettings = () => {
           {isSaving ? "Saving..." : "Save All Changes"}
         </Button>
       </div>
+
+      {/* Branding */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Type className="h-5 w-5" />
+            Site Branding
+          </CardTitle>
+          <CardDescription>Configure your site name or logo for the navigation</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>Use Logo Instead of Text</Label>
+              <p className="text-sm text-muted-foreground">Toggle to display a logo image instead of text</p>
+            </div>
+            <Switch
+              checked={branding.use_logo}
+              onCheckedChange={(checked) => setBranding({ ...branding, use_logo: checked })}
+            />
+          </div>
+          {branding.use_logo ? (
+            <div>
+              <Label>Logo URL</Label>
+              <Input
+                value={branding.logo_url}
+                onChange={(e) => setBranding({ ...branding, logo_url: e.target.value })}
+                placeholder="https://..."
+              />
+              {branding.logo_url && (
+                <div className="mt-2 p-2 bg-muted rounded-lg">
+                  <img src={branding.logo_url} alt="Logo preview" className="h-8 object-contain" />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <Label>Site Name</Label>
+              <Input
+                value={branding.site_name}
+                onChange={(e) => setBranding({ ...branding, site_name: e.target.value })}
+                placeholder="My Portfolio"
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Favicon */}
       <FaviconUploader
