@@ -125,12 +125,9 @@
     color: #FFFFFF;
   }
 
-  /* Mango-orange gradient text utility */
+  /* Mango-orange text utility */
   .text-gradient-orange {
-    background: linear-gradient(90deg, #D84A16 0%, #E45A1F 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #D84A16;
   }
 
   /* Pure white text */
