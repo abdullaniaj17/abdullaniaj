@@ -8,6 +8,7 @@ import Auth from "./pages/Auth";
 import AdminLayout from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProjects from "./pages/admin/Projects";
+import AdminCaseStudies from "./pages/admin/CaseStudies";
 import AdminBlog from "./pages/admin/Blog";
 import AdminMedia from "./pages/admin/Media";
 import AdminTestimonials from "./pages/admin/Testimonials";
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/page/:slug" element={<CustomPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="case-studies" element={<AdminCaseStudies />} />
             <Route path="projects" element={<AdminProjects />} />
             <Route path="blog" element={<AdminBlog />} />
             <Route path="media" element={<AdminMedia />} />
