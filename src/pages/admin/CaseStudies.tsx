@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, GripVertical, Upload, X, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, GripVertical, X, ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import MediaPicker from "@/components/admin/MediaPicker";
+import type { Json } from "@/integrations/supabase/types";
 
 interface MetricItem {
   label: string;
@@ -37,8 +39,6 @@ const AdminCaseStudies = () => {
     is_visible: true,
     metrics: [] as MetricItem[],
   });
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const fetchStudies = async () => {
@@ -75,28 +75,6 @@ const AdminCaseStudies = () => {
     setDialogOpen(true);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `case-studies/${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("site-assets").upload(path, file);
-    if (error) {
-      toast({ title: "Upload failed", description: error.message, variant: "destructive" });
-      setUploading(false);
-      return;
-    }
-    const { data: urlData } = supabase.storage.from("site-assets").getPublicUrl(path);
-    setForm(f => ({ ...f, image_url: urlData.publicUrl }));
-    setUploading(false);
-    toast({ title: "Image uploaded" });
-  };
-
-  const removeImage = () => {
-    setForm(f => ({ ...f, image_url: "" }));
-  };
-
   const addMetric = () => {
     setForm(f => ({ ...f, metrics: [...f.metrics, { label: "", value: "" }] }));
   };
@@ -118,7 +96,7 @@ const AdminCaseStudies = () => {
       toast({ title: "Title is required", variant: "destructive" });
       return;
     }
-    const metricsJson = form.metrics.filter(m => m.label.trim() || m.value.trim()) as unknown as import("@/integrations/supabase/types").Json;
+    const metricsJson = form.metrics.filter(m => m.label.trim() || m.value.trim()) as unknown as Json;
     const payload = {
       title: form.title,
       description: form.description || null,
@@ -128,11 +106,19 @@ const AdminCaseStudies = () => {
     };
 
     if (editingStudy) {
-      await supabase.from("case_studies").update(payload).eq("id", editingStudy.id);
+      const { error } = await supabase.from("case_studies").update(payload).eq("id", editingStudy.id);
+      if (error) {
+        toast({ title: "Error saving", description: error.message, variant: "destructive" });
+        return;
+      }
       toast({ title: "Case study updated" });
     } else {
       const maxOrder = studies.length > 0 ? Math.max(...studies.map(s => s.display_order ?? 0)) + 1 : 0;
-      await supabase.from("case_studies").insert([{ ...payload, display_order: maxOrder }]);
+      const { error } = await supabase.from("case_studies").insert([{ ...payload, display_order: maxOrder }]);
+      if (error) {
+        toast({ title: "Error creating", description: error.message, variant: "destructive" });
+        return;
+      }
       toast({ title: "Case study created" });
     }
     setDialogOpen(false);
@@ -140,8 +126,12 @@ const AdminCaseStudies = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this case study?")) return;
-    await supabase.from("case_studies").delete().eq("id", id);
+    if (!confirm("Delete this case study? This cannot be undone.")) return;
+    const { error } = await supabase.from("case_studies").delete().eq("id", id);
+    if (error) {
+      toast({ title: "Error deleting", description: error.message, variant: "destructive" });
+      return;
+    }
     toast({ title: "Case study deleted" });
     fetchStudies();
   };
@@ -172,63 +162,38 @@ const AdminCaseStudies = () => {
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={openCreate}><Plus className="w-4 h-4 mr-2" />Add Case Study</Button>
+            <Button onClick={openCreate}><Plus className="w-4 h-4 mr-2" />Add New Case Study</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingStudy ? "Edit" : "New"} Case Study</DialogTitle>
             </DialogHeader>
             <div className="space-y-5">
-              {/* Title */}
               <div>
                 <Label>Title</Label>
                 <Input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. E-commerce Campaign — 340% ROAS" />
               </div>
 
-              {/* Description */}
               <div>
                 <Label>Description</Label>
-                <Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Describe the campaign results..." rows={4} />
+                <Textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Describe the campaign, strategy, and results..." rows={5} />
               </div>
 
-              {/* Featured Image */}
-              <div>
-                <Label>Featured Image</Label>
-                {form.image_url ? (
-                  <div className="mt-2 relative rounded-lg overflow-hidden border border-border">
-                    <img src={form.image_url} alt="Preview" className="w-full h-48 object-cover" />
-                    <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7" onClick={removeImage}>
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div
-                    className="mt-2 border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <ImageIcon className="w-8 h-8 mx-auto text-muted-foreground mb-2" />
-                    <p className="text-sm text-muted-foreground">
-                      {uploading ? "Uploading..." : "Click to upload an image"}
-                    </p>
-                  </div>
-                )}
-                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                {!form.image_url && (
-                  <div className="mt-2">
-                    <Label className="text-xs text-muted-foreground">Or paste image URL</Label>
-                    <Input value={form.image_url} onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))} placeholder="https://..." className="mt-1" />
-                  </div>
-                )}
-              </div>
+              {/* Media Library Picker */}
+              <MediaPicker
+                value={form.image_url}
+                onChange={(url) => setForm(f => ({ ...f, image_url: url }))}
+                label="Featured Image"
+              />
 
               {/* Metrics */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <Label>Metrics</Label>
+                  <Label>Campaign Metrics</Label>
                   <Button variant="outline" size="sm" onClick={addMetric}><Plus className="w-3 h-3 mr-1" />Add Metric</Button>
                 </div>
                 {form.metrics.length === 0 && (
-                  <p className="text-sm text-muted-foreground">No metrics yet. Add metrics like CPA, Conversions, ROAS, etc.</p>
+                  <p className="text-sm text-muted-foreground">Add metrics like CPA, Conversions, ROAS, CTR, etc.</p>
                 )}
                 <div className="space-y-2">
                   {form.metrics.map((metric, i) => (
@@ -243,13 +208,20 @@ const AdminCaseStudies = () => {
                 </div>
               </div>
 
-              {/* Visibility */}
-              <div className="flex items-center gap-2">
+              {/* Status */}
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                 <Switch checked={form.is_visible} onCheckedChange={v => setForm(f => ({ ...f, is_visible: v }))} />
-                <Label>Visible on portfolio page</Label>
+                <div>
+                  <Label className="cursor-pointer">
+                    {form.is_visible ? "Published" : "Draft"}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    {form.is_visible ? "Visible on portfolio page" : "Hidden from portfolio page"}
+                  </p>
+                </div>
               </div>
 
-              <Button onClick={handleSave} className="w-full" disabled={uploading}>
+              <Button onClick={handleSave} className="w-full">
                 {editingStudy ? "Update" : "Create"} Case Study
               </Button>
             </div>
@@ -258,7 +230,13 @@ const AdminCaseStudies = () => {
       </div>
 
       {studies.length === 0 ? (
-        <Card><CardContent className="py-12 text-center text-muted-foreground">No case studies yet. Add your first one!</CardContent></Card>
+        <Card>
+          <CardContent className="py-12 text-center text-muted-foreground">
+            <ImageIcon className="w-10 h-10 mx-auto mb-3" />
+            <p className="font-medium">No case studies yet</p>
+            <p className="text-sm mt-1">Click "Add New Case Study" to create your first one.</p>
+          </CardContent>
+        </Card>
       ) : (
         <div className="space-y-3">
           {studies.map((study, index) => (
@@ -273,9 +251,9 @@ const AdminCaseStudies = () => {
                   </Button>
                 </div>
                 {study.image_url ? (
-                  <img src={study.image_url} alt="" className="w-20 h-14 object-cover rounded" />
+                  <img src={study.image_url} alt={study.title} className="w-24 h-16 object-cover rounded border border-border" />
                 ) : (
-                  <div className="w-20 h-14 rounded bg-muted flex items-center justify-center">
+                  <div className="w-24 h-16 rounded bg-muted flex items-center justify-center border border-border">
                     <ImageIcon className="w-5 h-5 text-muted-foreground" />
                   </div>
                 )}
@@ -283,11 +261,11 @@ const AdminCaseStudies = () => {
                   <h3 className="font-semibold truncate">{study.title}</h3>
                   <p className="text-sm text-muted-foreground truncate">{study.description}</p>
                   {study.metrics && study.metrics.length > 0 && (
-                    <p className="text-xs text-muted-foreground mt-1">{study.metrics.length} metric(s)</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{study.metrics.length} metric(s)</p>
                   )}
                 </div>
-                <span className={`text-xs px-2 py-1 rounded ${study.is_visible ? "bg-green-100 text-green-700" : "bg-muted text-muted-foreground"}`}>
-                  {study.is_visible ? "Visible" : "Hidden"}
+                <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${study.is_visible ? "bg-green-500/10 text-green-600" : "bg-muted text-muted-foreground"}`}>
+                  {study.is_visible ? "Published" : "Draft"}
                 </span>
                 <Button variant="ghost" size="icon" onClick={() => openEdit(study)}><Pencil className="w-4 h-4" /></Button>
                 <Button variant="ghost" size="icon" onClick={() => handleDelete(study.id)}><Trash2 className="w-4 h-4 text-destructive" /></Button>
