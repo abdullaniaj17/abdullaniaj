@@ -55,25 +55,13 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.querySelector(sectionId);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
-    setIsMobileMenuOpen(false);
-  };
-
   const handleNavClick = (e: React.MouseEvent, item: NavItem) => {
     if (item.open_in_new_tab) {
       e.preventDefault();
       window.open(item.href, "_blank", "noopener,noreferrer");
       return;
     }
-    if (isHomePage && item.href !== "/") {
-      e.preventDefault();
-      const sectionId = `#${item.href.replace("/", "")}`;
-      scrollToSection(sectionId);
-    } else {
-      setIsMobileMenuOpen(false);
-    }
+    setIsMobileMenuOpen(false);
   };
 
   return (
