@@ -5,15 +5,14 @@ import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Skills", href: "/skills" },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Services", href: "/services" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
-];
+interface NavItem {
+  id: string;
+  label: string;
+  href: string;
+  display_order: number;
+  is_visible: boolean;
+  open_in_new_tab: boolean;
+}
 
 interface BrandingSettings {
   site_name: string;
@@ -24,6 +23,7 @@ interface BrandingSettings {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [navItems, setNavItems] = useState<NavItem[]>([]);
   const [branding, setBranding] = useState<BrandingSettings>({
     site_name: "Portfolio",
     logo_url: "",
@@ -33,42 +33,43 @@ const Navbar = () => {
   const isHomePage = location.pathname === "/";
 
   useEffect(() => {
-    const fetchBranding = async () => {
-      const { data } = await supabase
-        .from("site_settings")
-        .select("setting_value")
-        .eq("setting_key", "branding")
-        .maybeSingle();
+    const fetchData = async () => {
+      const [brandingRes, navRes] = await Promise.all([
+        supabase.from("site_settings").select("setting_value").eq("setting_key", "branding").maybeSingle(),
+        supabase.from("nav_menu_items").select("*").eq("is_visible", true).order("display_order", { ascending: true }),
+      ]);
 
-      if (data) {
-        setBranding(data.setting_value as unknown as BrandingSettings);
+      if (brandingRes.data) {
+        setBranding(brandingRes.data.setting_value as unknown as BrandingSettings);
+      }
+      if (navRes.data && navRes.data.length > 0) {
+        setNavItems(navRes.data as NavItem[]);
       }
     };
-
-    fetchBranding();
+    fetchData();
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    if (element) element.scrollIntoView({ behavior: "smooth" });
     setIsMobileMenuOpen(false);
   };
 
-  const handleNavClick = (e: React.MouseEvent, href: string) => {
-    if (isHomePage && href !== "/") {
+  const handleNavClick = (e: React.MouseEvent, item: NavItem) => {
+    if (item.open_in_new_tab) {
       e.preventDefault();
-      const sectionId = `#${href.replace("/", "")}`;
+      window.open(item.href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (isHomePage && item.href !== "/") {
+      e.preventDefault();
+      const sectionId = `#${item.href.replace("/", "")}`;
       scrollToSection(sectionId);
     } else {
       setIsMobileMenuOpen(false);
@@ -89,11 +90,7 @@ const Navbar = () => {
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link
-              to="/"
-              className="text-xl font-bold tracking-tight hover:text-accent transition-colors"
-            >
+            <Link to="/" className="text-xl font-bold tracking-tight hover:text-accent transition-colors">
               {branding.use_logo && branding.logo_url ? (
                 <img src={branding.logo_url} alt={branding.site_name} className="h-8 object-contain" />
               ) : (
@@ -101,13 +98,12 @@ const Navbar = () => {
               )}
             </Link>
 
-            {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-1">
               {navItems.map((item) => (
                 <Link
-                  key={item.label}
-                  to={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
+                  key={item.id}
+                  to={item.open_in_new_tab ? "#" : item.href}
+                  onClick={(e) => handleNavClick(e, item)}
                   className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg ${
                     location.pathname === item.href
                       ? "text-foreground"
@@ -126,7 +122,6 @@ const Navbar = () => {
               ))}
             </div>
 
-            {/* CTA Button */}
             <div className="hidden lg:block">
               <Button
                 size="sm"
@@ -137,24 +132,18 @@ const Navbar = () => {
               </Button>
             </div>
 
-            {/* Mobile Menu Button */}
             <Button
               variant="ghost"
               size="icon"
               className="lg:hidden rounded-lg border border-border/50"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -164,10 +153,7 @@ const Navbar = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 z-40 lg:hidden"
           >
-            <div
-              className="absolute inset-0 bg-background/95 backdrop-blur-xl"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
+            <div className="absolute inset-0 bg-background/95 backdrop-blur-xl" onClick={() => setIsMobileMenuOpen(false)} />
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -177,14 +163,14 @@ const Navbar = () => {
             >
               {navItems.map((item, index) => (
                 <motion.div
-                  key={item.label}
+                  key={item.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 + 0.15 }}
                 >
                   <Link
-                    to={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
+                    to={item.open_in_new_tab ? "#" : item.href}
+                    onClick={(e) => handleNavClick(e, item)}
                     className={`block text-2xl font-medium py-3 px-4 rounded-xl transition-colors ${
                       location.pathname === item.href
                         ? "text-accent bg-card/50"
