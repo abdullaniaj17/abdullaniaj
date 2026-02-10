@@ -3,7 +3,12 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/portfolio/Navbar";
 import Footer from "@/components/portfolio/Footer";
 import { motion } from "framer-motion";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, TrendingUp } from "lucide-react";
+
+interface MetricItem {
+  label: string;
+  value: string;
+}
 
 interface CaseStudy {
   id: string;
@@ -12,6 +17,7 @@ interface CaseStudy {
   image_url: string | null;
   display_order: number | null;
   is_visible: boolean | null;
+  metrics: MetricItem[] | null;
 }
 
 const PortfolioPage = () => {
@@ -25,7 +31,12 @@ const PortfolioPage = () => {
         .select("*")
         .order("display_order", { ascending: true });
 
-      if (data) setCaseStudies(data);
+      if (data) {
+        setCaseStudies(data.map(s => ({
+          ...s,
+          metrics: Array.isArray(s.metrics) ? (s.metrics as unknown as MetricItem[]) : [],
+        })));
+      }
       setIsLoading(false);
     };
 
@@ -66,7 +77,7 @@ const PortfolioPage = () => {
 
           {/* Case Studies */}
           <div className="space-y-24 max-w-5xl mx-auto">
-            {caseStudies.map((study, index) => (
+            {caseStudies.map((study) => (
               <motion.div
                 key={study.id}
                 initial={{ opacity: 0, y: 40 }}
@@ -82,6 +93,7 @@ const PortfolioPage = () => {
                       src={study.image_url}
                       alt={study.title}
                       className="w-full h-auto object-contain"
+                      loading="lazy"
                     />
                   </div>
                 )}
@@ -95,6 +107,23 @@ const PortfolioPage = () => {
                     <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6">
                       {study.description}
                     </p>
+                  )}
+
+                  {/* Metrics */}
+                  {study.metrics && study.metrics.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
+                      {study.metrics.map((metric, i) => (
+                        <div key={i} className="rounded-xl bg-muted/50 border border-border/30 p-4 text-center">
+                          <div className="flex items-center justify-center gap-1.5 mb-1">
+                            <TrendingUp className="w-3.5 h-3.5 text-accent" />
+                            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                              {metric.label}
+                            </span>
+                          </div>
+                          <p className="text-xl md:text-2xl font-bold text-foreground">{metric.value}</p>
+                        </div>
+                      ))}
+                    </div>
                   )}
 
                   {/* Privacy note */}
