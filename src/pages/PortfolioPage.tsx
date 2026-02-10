@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/portfolio/Navbar";
 import Footer from "@/components/portfolio/Footer";
 import { motion } from "framer-motion";
-import { ShieldCheck, TrendingUp } from "lucide-react";
+import { ShieldCheck, TrendingUp, ImageIcon } from "lucide-react";
 
 interface MetricItem {
   label: string;
@@ -86,15 +86,22 @@ const PortfolioPage = () => {
                 transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className="rounded-2xl border border-border/30 bg-card/20 overflow-hidden"
               >
-                {/* Image */}
-                {study.image_url && (
-                  <div className="w-full overflow-hidden">
+                {/* Featured Image */}
+                {study.image_url ? (
+                  <div className="w-full overflow-hidden bg-muted">
                     <img
                       src={study.image_url}
                       alt={study.title}
-                      className="w-full h-auto object-contain"
+                      className="w-full h-auto max-h-[500px] object-contain"
                       loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
                     />
+                  </div>
+                ) : (
+                  <div className="w-full h-48 bg-muted/50 flex items-center justify-center">
+                    <ImageIcon className="w-12 h-12 text-muted-foreground/30" />
                   </div>
                 )}
 
@@ -104,12 +111,12 @@ const PortfolioPage = () => {
                     {study.title}
                   </h2>
                   {study.description && (
-                    <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6">
+                    <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6 whitespace-pre-line">
                       {study.description}
                     </p>
                   )}
 
-                  {/* Metrics */}
+                  {/* Metrics Grid */}
                   {study.metrics && study.metrics.length > 0 && (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-6">
                       {study.metrics.map((metric, i) => (
@@ -137,6 +144,7 @@ const PortfolioPage = () => {
 
             {caseStudies.length === 0 && (
               <div className="text-center py-16">
+                <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
                 <p className="text-muted-foreground">No case studies available yet.</p>
               </div>
             )}
