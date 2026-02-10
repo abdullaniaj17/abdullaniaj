@@ -3,53 +3,38 @@ import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/portfolio/Navbar";
 import Footer from "@/components/portfolio/Footer";
 import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ShieldCheck } from "lucide-react";
 
-interface Project {
+interface CaseStudy {
   id: string;
   title: string;
   description: string | null;
-  short_description: string | null;
   image_url: string | null;
-  category: string | null;
-  tags: string[] | null;
-  live_url: string | null;
-  github_url: string | null;
-  is_featured: boolean | null;
+  display_order: number | null;
+  is_visible: boolean | null;
 }
 
 const PortfolioPage = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState<string>("all");
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchCaseStudies = async () => {
       const { data } = await supabase
-        .from("projects")
+        .from("case_studies")
         .select("*")
-        .eq("is_visible", true)
         .order("display_order", { ascending: true });
 
-      if (data) {
-        setProjects(data);
-      }
+      if (data) setCaseStudies(data);
       setIsLoading(false);
     };
 
-    fetchProjects();
+    fetchCaseStudies();
   }, []);
-
-  const categories = ["all", ...new Set(projects.map(p => p.category).filter(Boolean))];
-  const filteredProjects = filter === "all" 
-    ? projects 
-    : projects.filter(p => p.category === filter);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
     );
@@ -60,102 +45,73 @@ const PortfolioPage = () => {
       <Navbar />
       <main className="pt-24 pb-16">
         <div className="container mx-auto px-4">
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-20"
           >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Portfolio</h1>
-            <p className="text-muted-foreground text-lg mb-8 max-w-2xl">
-              Explore my work across different categories and technologies.
+            <span className="inline-block px-4 py-2 mb-6 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground border border-border/50 rounded-full">
+              Case Studies
+            </span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              <span className="text-foreground">Google Ads</span>{" "}
+              <span className="text-accent">Results</span>
+            </h1>
+            <p className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto">
+              Real campaign performance data showcasing measurable results across Google Ads.
             </p>
+          </motion.div>
 
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2 mb-12">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={filter === category ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setFilter(category as string)}
-                  className="capitalize"
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-
-            {/* Projects Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="group bg-card border border-border rounded-2xl overflow-hidden hover:shadow-xl transition-all"
-                >
-                  <div className="aspect-video relative overflow-hidden bg-muted">
-                    {project.image_url ? (
-                      <img
-                        src={project.image_url}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-muted-foreground">No Image</span>
-                      </div>
-                    )}
-                    {project.is_featured && (
-                      <Badge className="absolute top-3 left-3 bg-primary">Featured</Badge>
-                    )}
+          {/* Case Studies */}
+          <div className="space-y-24 max-w-5xl mx-auto">
+            {caseStudies.map((study, index) => (
+              <motion.div
+                key={study.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="rounded-2xl border border-border/30 bg-card/20 overflow-hidden"
+              >
+                {/* Image */}
+                {study.image_url && (
+                  <div className="w-full overflow-hidden">
+                    <img
+                      src={study.image_url}
+                      alt={study.title}
+                      className="w-full h-auto object-contain"
+                    />
                   </div>
-                  <div className="p-5">
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                      {project.short_description || project.description}
+                )}
+
+                {/* Content */}
+                <div className="p-8 md:p-10">
+                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                    {study.title}
+                  </h2>
+                  {study.description && (
+                    <p className="text-muted-foreground text-base md:text-lg leading-relaxed mb-6">
+                      {study.description}
                     </p>
-                    
-                    {project.tags && project.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {project.tags.slice(0, 4).map((tag, i) => (
-                          <Badge key={i} variant="secondary" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+                  )}
 
-                    <div className="flex gap-2">
-                      {project.live_url && (
-                        <Button size="sm" asChild>
-                          <a href={project.live_url} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink className="w-4 h-4 mr-1" />
-                            Live Demo
-                          </a>
-                        </Button>
-                      )}
-                      {project.github_url && (
-                        <Button size="sm" variant="outline" asChild>
-                          <a href={project.github_url} target="_blank" rel="noopener noreferrer">
-                            <Github className="w-4 h-4 mr-1" />
-                            Code
-                          </a>
-                        </Button>
-                      )}
-                    </div>
+                  {/* Privacy note */}
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground/70 border-t border-border/20 pt-5">
+                    <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
+                    <span>Client details have been anonymized to protect privacy.</span>
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              </motion.div>
+            ))}
 
-            {filteredProjects.length === 0 && (
+            {caseStudies.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-muted-foreground">No projects found in this category.</p>
+                <p className="text-muted-foreground">No case studies available yet.</p>
               </div>
             )}
-          </motion.div>
+          </div>
         </div>
       </main>
       <Footer />
