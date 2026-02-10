@@ -28,6 +28,8 @@ import { User, Session } from "@supabase/supabase-js";
 const sidebarItems = [
   { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
   { label: "Pages", icon: Files, path: "/admin/pages" },
+  { label: "Navigation", icon: Menu, path: "/admin/navigation" },
+  { label: "Footer", icon: Settings, path: "/admin/footer" },
   { label: "Projects", icon: FolderKanban, path: "/admin/projects" },
   { label: "Blog Posts", icon: FileText, path: "/admin/blog" },
   { label: "Media Library", icon: ImageIcon, path: "/admin/media" },

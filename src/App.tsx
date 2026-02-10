@@ -19,6 +19,8 @@ import AdminSettings from "./pages/admin/Settings";
 import AdminCustomCode from "./pages/admin/CustomCode";
 import AdminSEO from "./pages/admin/SEO";
 import AdminPages from "./pages/admin/Pages";
+import AdminNavigation from "./pages/admin/Navigation";
+import AdminFooterContent from "./pages/admin/FooterContent";
 import CustomCodeInjector from "./components/CustomCodeInjector";
 import SEOHead from "./components/SEOHead";
 import FaviconManager from "./components/FaviconManager";
@@ -67,6 +69,8 @@ const App = () => (
             <Route path="custom-code" element={<AdminCustomCode />} />
             <Route path="seo" element={<AdminSEO />} />
             <Route path="pages" element={<AdminPages />} />
+            <Route path="navigation" element={<AdminNavigation />} />
+            <Route path="footer" element={<AdminFooterContent />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
           <Route path="*" element={<NotFound />} />

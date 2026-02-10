@@ -131,6 +131,36 @@ export type Database = {
         }
         Relationships: []
       }
+      footer_content: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          is_visible: boolean | null
+          section_data: Json
+          section_key: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          section_data?: Json
+          section_key: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          is_visible?: boolean | null
+          section_data?: Json
+          section_key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       media: {
         Row: {
           alt_text: string | null
@@ -160,6 +190,50 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      nav_menu_items: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          href: string
+          id: string
+          is_visible: boolean | null
+          label: string
+          open_in_new_tab: boolean | null
+          parent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          href: string
+          id?: string
+          is_visible?: boolean | null
+          label: string
+          open_in_new_tab?: boolean | null
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          href?: string
+          id?: string
+          is_visible?: boolean | null
+          label?: string
+          open_in_new_tab?: boolean | null
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nav_menu_items_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "nav_menu_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pages: {
         Row: {

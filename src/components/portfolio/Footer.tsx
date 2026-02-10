@@ -1,5 +1,14 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Twitter, Instagram, ArrowUp } from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, Facebook, ArrowUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+
+interface FooterSection {
+  section_key: string;
+  section_data: Record<string, any>;
+  is_visible: boolean;
+}
 
 interface FooterProps {
   socialLinks?: {
@@ -7,45 +16,88 @@ interface FooterProps {
     linkedin?: string;
     github?: string;
     instagram?: string;
+    facebook?: string;
+    whatsapp?: string;
   };
 }
 
 const Footer = ({ socialLinks = {} }: FooterProps) => {
   const currentYear = new Date().getFullYear();
+  const [sections, setSections] = useState<FooterSection[]>([]);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  useEffect(() => {
+    const fetchFooter = async () => {
+      const { data } = await supabase
+        .from("footer_content")
+        .select("section_key, section_data, is_visible")
+        .order("display_order", { ascending: true });
+      if (data) setSections(data as FooterSection[]);
+    };
+    fetchFooter();
+  }, []);
 
-  const socialIcons = {
+  const getSection = (key: string) => sections.find((s) => s.section_key === key);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const socialIcons: Record<string, any> = {
     twitter: Twitter,
     linkedin: Linkedin,
     github: Github,
     instagram: Instagram,
+    facebook: Facebook,
   };
 
+  const copyrightSection = getSection("copyright");
+  const ctaSection = getSection("cta_button");
+  const linksSection = getSection("footer_links");
+  const socialSection = getSection("social_links");
+
   const hasSocialLinks = Object.values(socialLinks).some((url) => url);
+  const showSocial = socialSection ? socialSection.is_visible : true;
+  const footerLinks: { title: string; url: string }[] = linksSection?.section_data?.columns || [];
 
   return (
     <footer className="relative py-16 border-t border-border/30">
-      {/* Grid background */}
       <div className="absolute inset-0 grid-bg-subtle opacity-50" />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Copyright */}
-          <motion.p
+        {/* Footer Links Row */}
+        {linksSection?.is_visible && footerLinks.length > 0 && (
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-sm text-muted-foreground"
+            className="flex flex-wrap justify-center gap-6 mb-8"
           >
-            © {currentYear} All rights reserved.
-          </motion.p>
+            {footerLinks.map((link, idx) => (
+              <Link
+                key={idx}
+                to={link.url}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {link.title}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          {/* Copyright */}
+          {(copyrightSection?.is_visible ?? true) && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-sm text-muted-foreground"
+            >
+              © {currentYear} {copyrightSection?.section_data?.text || "All rights reserved."}
+            </motion.p>
+          )}
 
           {/* Social Links */}
-          {hasSocialLinks && (
+          {showSocial && hasSocialLinks && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -55,7 +107,7 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
             >
               {Object.entries(socialLinks).map(([platform, url]) => {
                 if (!url) return null;
-                const Icon = socialIcons[platform as keyof typeof socialIcons];
+                const Icon = socialIcons[platform];
                 if (!Icon) return null;
                 return (
                   <a
