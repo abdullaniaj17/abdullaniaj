@@ -190,7 +190,7 @@ const AdminServices = () => {
                 <Label>Title *</Label>
                 <Input
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                   required
                 />
               </div>
@@ -198,7 +198,7 @@ const AdminServices = () => {
                 <Label>Description</Label>
                 <Textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
                 />
               </div>
@@ -207,7 +207,7 @@ const AdminServices = () => {
                   <Label>Icon (code, palette, smartphone, globe, zap, shield)</Label>
                   <Input
                     value={formData.icon}
-                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, icon: e.target.value }))}
                     placeholder="code"
                   />
                 </div>
@@ -215,21 +215,21 @@ const AdminServices = () => {
                   <Label>Price</Label>
                   <Input
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                     placeholder="$500+"
                   />
                 </div>
               </div>
               <MediaPicker
                 value={formData.image_url}
-                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
                 label="Service Image"
               />
               <div>
                 <Label>Features (one per line)</Label>
                 <Textarea
                   value={formData.features}
-                  onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, features: e.target.value }))}
                   placeholder="Feature 1&#10;Feature 2&#10;Feature 3"
                   rows={3}
                 />
@@ -240,13 +240,13 @@ const AdminServices = () => {
                   <Input
                     type="number"
                     value={formData.display_order}
-                    onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))}
                   />
                 </div>
                 <div className="flex items-center gap-2 pt-6">
                   <Switch
                     checked={formData.is_visible}
-                    onCheckedChange={(checked) => setFormData({ ...formData, is_visible: checked })}
+                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, is_visible: checked }))}
                   />
                   <Label>Visible on Site</Label>
                 </div>
