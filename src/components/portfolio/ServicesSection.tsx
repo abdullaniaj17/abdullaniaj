@@ -7,6 +7,7 @@ interface Service {
   description?: string;
   icon?: string;
   features?: string[];
+  image_url?: string | null;
 }
 
 interface ServicesSectionProps {
@@ -106,8 +107,21 @@ const ServicesSection = ({ services = defaultServices }: ServicesSectionProps) =
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative p-8 rounded-2xl bg-card/30 border border-border/30 hover:border-border/60 transition-all duration-500"
+                className="group relative rounded-2xl bg-card/30 border border-border/30 hover:border-border/60 transition-all duration-500 overflow-hidden"
               >
+                {/* Image */}
+                {service.image_url ? (
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={service.image_url}
+                      alt={service.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                ) : null}
+
+                <div className="p-8">
                 {/* Icon */}
                 <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
                   <IconComponent className="w-7 h-7 text-accent" />
@@ -132,6 +146,7 @@ const ServicesSection = ({ services = defaultServices }: ServicesSectionProps) =
                     ))}
                   </ul>
                 )}
+                </div>
 
                 {/* Hover accent line */}
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

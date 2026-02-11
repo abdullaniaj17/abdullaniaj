@@ -420,6 +420,7 @@ export type Database = {
           features: string[] | null
           icon: string | null
           id: string
+          image_url: string | null
           is_visible: boolean | null
           price: string | null
           title: string
@@ -432,6 +433,7 @@ export type Database = {
           features?: string[] | null
           icon?: string | null
           id?: string
+          image_url?: string | null
           is_visible?: boolean | null
           price?: string | null
           title: string
@@ -444,6 +446,7 @@ export type Database = {
           features?: string[] | null
           icon?: string | null
           id?: string
+          image_url?: string | null
           is_visible?: boolean | null
           price?: string | null
           title?: string

@@ -23,6 +23,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import MediaPicker from "@/components/admin/MediaPicker";
 
 interface Service {
   id: string;
@@ -31,6 +32,7 @@ interface Service {
   icon: string | null;
   price: string | null;
   features: string[] | null;
+  image_url: string | null;
   is_visible: boolean | null;
   display_order: number | null;
 }
@@ -48,6 +50,7 @@ const AdminServices = () => {
     icon: "",
     price: "",
     features: "",
+    image_url: "",
     is_visible: true,
     display_order: 0,
   });
@@ -77,6 +80,7 @@ const AdminServices = () => {
       icon: "",
       price: "",
       features: "",
+      image_url: "",
       is_visible: true,
       display_order: services.length,
     });
@@ -92,6 +96,7 @@ const AdminServices = () => {
         icon: service.icon || "",
         price: service.price || "",
         features: service.features?.join("\n") || "",
+        image_url: service.image_url || "",
         is_visible: service.is_visible ?? true,
         display_order: service.display_order || 0,
       });
@@ -110,6 +115,7 @@ const AdminServices = () => {
       icon: formData.icon || null,
       price: formData.price || null,
       features: formData.features ? formData.features.split("\n").filter((f) => f.trim()) : null,
+      image_url: formData.image_url || null,
       is_visible: formData.is_visible,
       display_order: formData.display_order,
     };
@@ -214,6 +220,11 @@ const AdminServices = () => {
                   />
                 </div>
               </div>
+              <MediaPicker
+                value={formData.image_url}
+                onChange={(url) => setFormData({ ...formData, image_url: url })}
+                label="Service Image"
+              />
               <div>
                 <Label>Features (one per line)</Label>
                 <Textarea
