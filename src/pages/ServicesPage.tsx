@@ -14,6 +14,7 @@ interface Service {
   icon: string | null;
   features: string[] | null;
   price: string | null;
+  image_url: string | null;
 }
 
 const iconMap: Record<string, LucideIcon> = {
@@ -89,7 +90,21 @@ const ServicesPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
-                    <Card className="h-full hover:shadow-lg transition-shadow">
+                    <Card className="h-full hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                      {service.image_url ? (
+                        <div className="relative h-48 overflow-hidden">
+                          <img
+                            src={service.image_url}
+                            alt={service.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-48 bg-muted/30 flex items-center justify-center">
+                          <IconComponent className="w-12 h-12 text-muted-foreground/40" />
+                        </div>
+                      )}
                       <CardHeader>
                         <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                           <IconComponent className="w-6 h-6 text-primary" />
