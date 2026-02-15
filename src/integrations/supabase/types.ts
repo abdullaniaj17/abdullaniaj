@@ -201,29 +201,44 @@ export type Database = {
         Row: {
           alt_text: string | null
           created_at: string
+          description: string | null
+          display_order: number | null
           file_name: string
           file_size: number | null
           file_type: string | null
           file_url: string
           id: string
+          is_showcase: boolean | null
+          is_visible: boolean | null
+          title: string | null
         }
         Insert: {
           alt_text?: string | null
           created_at?: string
+          description?: string | null
+          display_order?: number | null
           file_name: string
           file_size?: number | null
           file_type?: string | null
           file_url: string
           id?: string
+          is_showcase?: boolean | null
+          is_visible?: boolean | null
+          title?: string | null
         }
         Update: {
           alt_text?: string | null
           created_at?: string
+          description?: string | null
+          display_order?: number | null
           file_name?: string
           file_size?: number | null
           file_type?: string | null
           file_url?: string
           id?: string
+          is_showcase?: boolean | null
+          is_visible?: boolean | null
+          title?: string | null
         }
         Relationships: []
       }
