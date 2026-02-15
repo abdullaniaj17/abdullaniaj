@@ -9,8 +9,19 @@ import media7 from "@/assets/media-7.jpg";
 import media8 from "@/assets/media-8.png";
 import media9 from "@/assets/media-9.jpg";
 import media10 from "@/assets/media-10.jpg";
+import media11 from "@/assets/media-11.png";
+import media12 from "@/assets/media-12.png";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
-const mediaItems = [
+interface ShowcaseItem {
+  id: string;
+  title: string;
+  image: string;
+  description: string;
+}
+
+const fallbackItems: ShowcaseItem[] = [
   { id: "1", title: "Google Ads Campaign Performance", image: media1, description: "15.6K clicks with 4.44% conversion rate" },
   { id: "2", title: "Lead Generation Results", image: media2, description: "247 clicks, 44 conversions at $10.69 cost/conv" },
   { id: "3", title: "PPC Campaign Analytics", image: media3, description: "3.74K clicks, 232 conversions at $5.84 cost/conv" },
@@ -21,9 +32,36 @@ const mediaItems = [
   { id: "8", title: "Google Ads for Plumbing Service", image: media8, description: "10.2K impressions, 8.5K conv value, $9.8K cost" },
   { id: "9", title: "Plumbing Campaign Metrics", image: media9, description: "12.8K clicks, 398 calls at $2.07 avg CPC" },
   { id: "10", title: "Campaign Overview Analytics", image: media10, description: "13.6K clicks, 1.96K conversions at $2.25 CPC" },
+  { id: "11", title: "Google Ads Search Certification", image: media11, description: "Google Ads Search Certified" },
+  { id: "12", title: "AI-Powered Performance Ads Certification", image: media12, description: "AI-Powered Performance Ads Certified" },
 ];
 
 const MediaSection = () => {
+  const [items, setItems] = useState<ShowcaseItem[]>(fallbackItems);
+
+  useEffect(() => {
+    const fetchShowcase = async () => {
+      const { data } = await supabase
+        .from("media")
+        .select("id, file_url, title, description, display_order")
+        .eq("is_showcase", true)
+        .eq("is_visible", true)
+        .order("display_order", { ascending: true });
+
+      if (data && data.length > 0) {
+        setItems(
+          data.map((item) => ({
+            id: item.id,
+            title: item.title || "",
+            image: item.file_url,
+            description: item.description || "",
+          }))
+        );
+      }
+    };
+    fetchShowcase();
+  }, []);
+
   return (
     <section id="media" className="relative py-32 overflow-hidden">
       <div className="absolute inset-0 grid-bg-subtle" />
@@ -47,7 +85,7 @@ const MediaSection = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {mediaItems.map((item, index) => (
+          {items.map((item, index) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 30 }}
