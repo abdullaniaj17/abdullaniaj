@@ -35,6 +35,7 @@ import BlogPostPage from "./pages/BlogPostPage";
 import ContactPage from "./pages/ContactPage";
 import CustomPage from "./pages/CustomPage";
 import FAQPage from "./pages/FAQPage";
+import QRCodePage from "./pages/QRCodePage";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FAQPage />} />
+          <Route path="/qr" element={<QRCodePage />} />
           <Route path="/page/:slug" element={<CustomPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
