@@ -24,6 +24,7 @@ interface FooterProps {
 const Footer = ({ socialLinks = {} }: FooterProps) => {
   const currentYear = new Date().getFullYear();
   const [sections, setSections] = useState<FooterSection[]>([]);
+  const calendlyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchFooter = async () => {
@@ -34,6 +35,14 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
       if (data) setSections(data as FooterSection[]);
     };
     fetchFooter();
+  }, []);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
   }, []);
 
   const getSection = (key: string) => sections.find((s) => s.section_key === key);
