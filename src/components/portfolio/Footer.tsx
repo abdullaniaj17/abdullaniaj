@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Twitter, Instagram, Facebook, ArrowUp } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -24,6 +24,7 @@ interface FooterProps {
 const Footer = ({ socialLinks = {} }: FooterProps) => {
   const currentYear = new Date().getFullYear();
   const [sections, setSections] = useState<FooterSection[]>([]);
+  const calendlyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchFooter = async () => {
@@ -34,6 +35,14 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
       if (data) setSections(data as FooterSection[]);
     };
     fetchFooter();
+  }, []);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
   }, []);
 
   const getSection = (key: string) => sections.find((s) => s.section_key === key);
@@ -62,6 +71,29 @@ const Footer = ({ socialLinks = {} }: FooterProps) => {
       <div className="absolute inset-0 grid-bg-subtle opacity-50" />
 
       <div className="container mx-auto px-4 relative z-10">
+        {/* Calendly Booking Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl mx-auto mb-16 text-center"
+        >
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+            Book a Free Consultation
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            Schedule a quick call to discuss your Google Ads growth strategy.
+          </p>
+          <div className="rounded-xl border border-border/40 bg-card/50 shadow-sm overflow-hidden">
+            <div
+              ref={calendlyRef}
+              className="calendly-inline-widget"
+              data-url="https://calendly.com/abdullaniaj17?hide_gdpr_banner=1&hide_landing_page_details=1"
+              style={{ minWidth: "100%", height: "660px" }}
+            />
+          </div>
+        </motion.div>
         {/* Footer Links Row */}
         {linksSection?.is_visible && footerLinks.length > 0 && (
           <motion.div
