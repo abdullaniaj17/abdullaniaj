@@ -61,6 +61,7 @@ const App = () => (
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/qr" element={<QRCodePage />} />
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/page/:slug" element={<CustomPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
