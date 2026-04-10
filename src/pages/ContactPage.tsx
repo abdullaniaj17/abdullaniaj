@@ -77,11 +77,8 @@ const ContactPage = () => {
         variant: "destructive",
       });
     } else {
-      toast({
-        title: "Success!",
-        description: "Your message has been sent. I'll get back to you soon!",
-      });
       setForm({ name: "", email: "", subject: "", message: "" });
+      navigate("/thank-you");
     }
     setIsSubmitting(false);
   };

@@ -36,6 +36,7 @@ import ContactPage from "./pages/ContactPage";
 import CustomPage from "./pages/CustomPage";
 import FAQPage from "./pages/FAQPage";
 import QRCodePage from "./pages/QRCodePage";
+import ThankYouPage from "./pages/ThankYouPage";
 
 const queryClient = new QueryClient();
 
