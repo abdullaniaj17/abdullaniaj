@@ -30,6 +30,7 @@ const ContactPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     email: "",
