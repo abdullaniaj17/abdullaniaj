@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
+import aboutPhoto from "@/assets/about-photo.png";
 
 interface AboutSectionProps {
   data?: {
