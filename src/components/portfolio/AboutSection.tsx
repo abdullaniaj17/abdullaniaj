@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
+import aboutPhoto from "@/assets/about-photo.png";
 
 interface AboutSectionProps {
   data?: {
@@ -36,22 +37,11 @@ const AboutSection = ({ data }: AboutSectionProps) => {
             className="relative order-2 lg:order-1"
           >
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
-              {data?.image_url ? (
-                <img
-                  src={data.image_url}
-                  alt="About"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-card via-muted to-card flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-24 h-24 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-4">
-                      <span className="text-4xl font-bold text-accent">JD</span>
-                    </div>
-                    <p className="text-muted-foreground text-sm">Your photo here</p>
-                  </div>
-                </div>
-              )}
+              <img
+                src={data?.image_url || aboutPhoto}
+                alt="About"
+                className="w-full h-full object-cover"
+              />
               {/* Decorative border */}
               <div className="absolute inset-0 rounded-2xl border border-border/30" />
             </div>
